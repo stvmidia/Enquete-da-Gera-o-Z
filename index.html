@@ -654,8 +654,12 @@
                 const summaryContainer = document.getElementById('final-summary-container');
                 summaryContainer.innerHTML = '<h2>Resultados Gerais por Pilar</h2>';
 
-                const pillarEntries = Object.entries(pillarTotals);
-                const maxVotes = Math.max(...Object.values(pillarTotals));
+                let pillarEntries = Object.entries(pillarTotals);
+                
+                // Sort pillars by votes in descending order
+                pillarEntries.sort(([, votesA], [, votesB]) => votesB - votesA);
+                
+                const maxVotes = pillarEntries.length > 0 ? pillarEntries[0][1] : 0;
                 
                 const pillarColors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#fbc02d', '#a65628'];
 
@@ -672,7 +676,7 @@
                     const bar = document.createElement('div');
                     bar.className = 'final-bar';
                     bar.style.backgroundColor = color;
-                    bar.textContent = `${pillar}: ${votes} votos`;
+                    bar.textContent = `#${index + 1} - ${pillar}: ${votes} votos`;
                     
                     const description = document.createElement('p');
                     description.className = 'pillar-description';
