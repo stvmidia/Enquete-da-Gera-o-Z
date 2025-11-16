@@ -230,6 +230,10 @@
             margin-bottom: 1.5rem;
             color: var(--text-color);
         }
+        
+        .pillar-summary-item {
+            margin-bottom: 1.5rem;
+        }
 
         .final-bar {
             height: 60px;
@@ -245,6 +249,14 @@
             white-space: nowrap;
         }
         
+        .pillar-description {
+            font-size: 1.4rem;
+            color: #555;
+            text-align: left;
+            margin-top: 0.5rem;
+            padding: 0 5px;
+        }
+
         #navigation-section {
             margin-top: 2rem;
         }
@@ -628,6 +640,16 @@
                         pillarTotals[result.pillar] = result.votes;
                     }
                 });
+                
+                const pillarDescriptions = {
+                    "Trabalho": "Reflete a busca por propósito, estabilidade e flexibilidade na carreira.",
+                    "Casa Própria": "Mede o desejo pela casa própria em comparação com outras experiências e investimentos.",
+                    "Autonomia": "Indica a idade e as condições ideais para a independência financeira e residencial.",
+                    "Saúde Mental": "Mostra a importância do bem-estar emocional e a abertura para discutir o tema.",
+                    "Planos de Família": "Explora as prioridades e os novos conceitos sobre casamento e filhos.",
+                    "Preocupação Climática": "Avalia o nível de consciência e ação em relação às questões ambientais.",
+                    "Vida Digital": "Analisa o impacto das redes sociais e da vida online no bem-estar e nas relações."
+                };
 
                 const summaryContainer = document.getElementById('final-summary-container');
                 summaryContainer.innerHTML = '<h2>Resultados Gerais por Pilar</h2>';
@@ -641,6 +663,9 @@
                     const percentage = (maxVotes > 0) ? (votes / maxVotes) * 100 : 0;
                     const color = pillarColors[index % pillarColors.length];
                     
+                    const itemContainer = document.createElement('div');
+                    itemContainer.className = 'pillar-summary-item';
+
                     const wrapper = document.createElement('div');
                     wrapper.className = 'result-bar-wrapper';
 
@@ -649,8 +674,14 @@
                     bar.style.backgroundColor = color;
                     bar.textContent = `${pillar}: ${votes} votos`;
                     
+                    const description = document.createElement('p');
+                    description.className = 'pillar-description';
+                    description.textContent = pillarDescriptions[pillar] || '';
+
                     wrapper.appendChild(bar);
-                    summaryContainer.appendChild(wrapper);
+                    itemContainer.appendChild(wrapper);
+                    itemContainer.appendChild(description);
+                    summaryContainer.appendChild(itemContainer);
 
                     setTimeout(() => {
                         bar.style.width = `${percentage}%`;
