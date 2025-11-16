@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enquete em Tempo Real</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f4f4f9;
@@ -26,7 +29,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             text-align: center;
@@ -97,14 +100,12 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
-        /* Style for the selected option */
         .option-item.selected {
             border-left-color: var(--primary-color);
-            background-color: #eaf5fc; /* A light blue to indicate selection */
+            background-color: #eaf5fc;
             font-weight: bold;
         }
 
-        /* Style for locked options to prevent further clicks */
         .options-grid.locked .option-item {
             cursor: not-allowed;
             opacity: 0.6;
@@ -115,7 +116,6 @@
             box-shadow: none;
         }
 
-        /* Ensure the selected item remains prominent when locked */
         .options-grid.locked .option-item.selected {
             opacity: 1;
         }
@@ -125,7 +125,7 @@
         }
         
         .vote-counter {
-            display: none; /* Hides the counter from view */
+            display: none;
         }
         
         #action-section {
@@ -169,7 +169,32 @@
             margin-top: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
+        }
+        
+        .result-item {
+            text-align: left;
+        }
+        
+        .result-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .option-result-text {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        .vote-info-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
         }
         
         .result-bar-wrapper {
@@ -177,21 +202,13 @@
             background-color: #ecf0f1;
             border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 1rem;
             border: 1px solid var(--border-color);
         }
         
         .result-bar {
-            height: 60px;
+            height: 40px;
             width: 0%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
             color: white;
-            font-weight: bold;
-            font-size: 1.6rem;
-            padding-left: 20px;
-            white-space: nowrap;
             transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
@@ -231,6 +248,10 @@
         #navigation-section {
             margin-top: 2rem;
         }
+        
+        #home-button {
+            margin-top: 2rem;
+        }
 
         @media (max-width: 900px) {
             .container {
@@ -241,7 +262,8 @@
             .options-grid { grid-template-columns: 1fr; gap: 1rem; }
             .option-item { font-size: 1.8rem; }
             .button { font-size: 2rem; padding: 1rem 2rem; }
-            .result-bar { height: 60px; font-size: 1.8rem; }
+            .result-bar { height: 50px; }
+            .option-result-text { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -281,10 +303,34 @@
             </div>
             
             <div id="results-container" class="hidden">
-                <div class="result-bar-wrapper"><div class="result-bar" id="bar-a"></div></div>
-                <div class="result-bar-wrapper"><div class="result-bar" id="bar-b"></div></div>
-                <div class="result-bar-wrapper"><div class="result-bar" id="bar-c"></div></div>
-                <div class="result-bar-wrapper"><div class="result-bar" id="bar-d"></div></div>
+                <div class="result-item">
+                    <div class="result-info">
+                        <p class="option-result-text" id="result-text-a"></p>
+                        <p class="vote-info-text" id="vote-info-a"></p>
+                    </div>
+                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-a"></div></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-info">
+                        <p class="option-result-text" id="result-text-b"></p>
+                        <p class="vote-info-text" id="vote-info-b"></p>
+                    </div>
+                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-b"></div></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-info">
+                        <p class="option-result-text" id="result-text-c"></p>
+                        <p class="vote-info-text" id="vote-info-c"></p>
+                    </div>
+                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-c"></div></div>
+                </div>
+                <div class="result-item">
+                    <div class="result-info">
+                        <p class="option-result-text" id="result-text-d"></p>
+                        <p class="vote-info-text" id="vote-info-d"></p>
+                    </div>
+                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-d"></div></div>
+                </div>
             </div>
 
         </div>
@@ -293,6 +339,7 @@
             <h1>Pesquisa Concluída!</h1>
             <p style="font-size: 2rem; margin-bottom: 2rem;">Obrigado por participar.</p>
             <div id="final-summary-container" style="width: 100%;"></div>
+            <button id="home-button" class="button">🏠 Início</button>
         </div>
     </div>
 
@@ -437,10 +484,26 @@
             const resultsContainer = document.getElementById('results-container');
             const optionsContainer = document.getElementById('options-container');
 
-            const barA = document.getElementById('bar-a');
-            const barB = document.getElementById('bar-b');
-            const barC = document.getElementById('bar-c');
-            const barD = document.getElementById('bar-d');
+            const bars = {
+                a: document.getElementById('bar-a'),
+                b: document.getElementById('bar-b'),
+                c: document.getElementById('bar-c'),
+                d: document.getElementById('bar-d'),
+            };
+
+            const resultTexts = {
+                a: document.getElementById('result-text-a'),
+                b: document.getElementById('result-text-b'),
+                c: document.getElementById('result-text-c'),
+                d: document.getElementById('result-text-d'),
+            };
+
+            const voteInfos = {
+                a: document.getElementById('vote-info-a'),
+                b: document.getElementById('vote-info-b'),
+                c: document.getElementById('vote-info-c'),
+                d: document.getElementById('vote-info-d'),
+            };
             
             const generateButton = document.getElementById('generate-button');
             const nextButton = document.getElementById('next-button');
@@ -449,6 +512,7 @@
             
             const appContentEl = document.getElementById('app-content');
             const finalScreenEl = document.getElementById('final-screen');
+            const homeButton = document.getElementById('home-button');
 
             function resetForNextStudent() {
                 studentHasVoted = false;
@@ -462,9 +526,8 @@
                 actionSection.classList.remove('hidden');
                 optionsContainer.classList.remove('hidden');
                 
-                [barA, barB, barC, barD].forEach(bar => {
+                Object.values(bars).forEach(bar => {
                     bar.style.width = '0%';
-                    bar.textContent = '';
                 });
 
                 currentVotes = { a: 0, b: 0, c: 0, d: 0 };
@@ -496,11 +559,9 @@
                 
                 studentVoteCounterEl.textContent = `(${studentVoteCount} ${studentVoteCount === 1 ? 'aluno votou' : 'alunos votaram'})`;
                 
-                // Visual feedback
                 document.getElementById(`option-${optionKey}`).classList.add('selected');
                 optionsContainer.classList.add('locked');
                 
-                // Show next student button
                 nextStudentButton.classList.remove('hidden');
             }
 
@@ -520,22 +581,28 @@
                 optionsContainer.classList.add('hidden');
                 resultsContainer.classList.remove('hidden');
 
-                const percA = (votesA / totalVotes) * 100;
-                const percB = (votesB / totalVotes) * 100;
-                const percC = (votesC / totalVotes) * 100;
-                const percD = (votesD / totalVotes) * 100;
+                const percA = (totalVotes > 0) ? (votesA / totalVotes) * 100 : 0;
+                const percB = (totalVotes > 0) ? (votesB / totalVotes) * 100 : 0;
+                const percC = (totalVotes > 0) ? (votesC / totalVotes) * 100 : 0;
+                const percD = (totalVotes > 0) ? (votesD / totalVotes) * 100 : 0;
+
+                const question = questions[currentQuestionIndex];
 
                 const resultsData = [
-                    { bar: barA, votes: votesA, perc: percA.toFixed(1), label: "A" },
-                    { bar: barB, votes: votesB, perc: percB.toFixed(1), label: "B" },
-                    { bar: barC, votes: votesC, perc: percC.toFixed(1), label: "C" },
-                    { bar: barD, votes: votesD, perc: percD.toFixed(1), label: "D" },
+                    { bar: bars.a, textEl: resultTexts.a, voteEl: voteInfos.a, text: `A) ${question.options.a}`, votes: votesA, perc: percA.toFixed(1) },
+                    { bar: bars.b, textEl: resultTexts.b, voteEl: voteInfos.b, text: `B) ${question.options.b}`, votes: votesB, perc: percB.toFixed(1) },
+                    { bar: bars.c, textEl: resultTexts.c, voteEl: voteInfos.c, text: `C) ${question.options.c}`, votes: votesC, perc: percC.toFixed(1) },
+                    { bar: bars.d, textEl: resultTexts.d, voteEl: voteInfos.d, text: `D) ${question.options.d}`, votes: votesD, perc: percD.toFixed(1) },
                 ];
+
+                resultsData.forEach(data => {
+                    data.textEl.textContent = data.text;
+                    data.voteEl.textContent = `${data.votes} votos (${data.perc}%)`;
+                });
 
                 setTimeout(() => {
                     resultsData.forEach(data => {
                         data.bar.style.width = `${data.perc}%`;
-                        data.bar.textContent = `${data.label}) ${data.votes} votos (${data.perc}%)`;
                     });
                     nextButton.classList.remove('hidden');
                 }, 100);
@@ -568,7 +635,7 @@
                 const pillarEntries = Object.entries(pillarTotals);
                 const maxVotes = Math.max(...Object.values(pillarTotals));
                 
-                const pillarColors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628'];
+                const pillarColors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#fbc02d', '#a65628'];
 
                 pillarEntries.forEach(([pillar, votes], index) => {
                     const percentage = (maxVotes > 0) ? (votes / maxVotes) * 100 : 0;
@@ -591,12 +658,23 @@
                 });
             }
 
+            function restartApp() {
+                currentQuestionIndex = 0;
+                allResults = [];
+                
+                finalScreenEl.classList.add('hidden');
+                appContentEl.classList.remove('hidden');
+
+                loadQuestion(currentQuestionIndex);
+            }
+
             optionItems.forEach(item => {
                 item.addEventListener('click', () => handleVote(item.dataset.option));
             });
             generateButton.addEventListener('click', generateResults);
             nextButton.addEventListener('click', showNextQuestion);
             nextStudentButton.addEventListener('click', resetForNextStudent);
+            homeButton.addEventListener('click', restartApp);
 
             // Initial load
             loadQuestion(currentQuestionIndex);
