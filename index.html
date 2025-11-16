@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquete em Tempo Real</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --text-color: #2c3e50;
+            --primary-color: #3498db;
+            --primary-hover: #2980b9;
+            --input-bg: #ffffff;
+            --border-color: #dddddd;
+            --bar-a-color: #3498db;
+            --bar-b-color: #2ecc71;
+            --bar-c-color: #e67e22;
+            --bar-d-color: #9b59b6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 30px;
+            margin: 2vh auto 0;
+        }
+
+        #app-content, #final-screen {
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        #question-counter {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        #question-text {
+            font-size: 2.4rem;
+            min-height: 120px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .option-item {
+            font-size: 1.8rem;
+            padding: 1rem;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-left: 5px solid #bdc3c7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, border-color 0.3s;
+            user-select: none; /* Prevent text selection on click */
+        }
+
+        .option-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Style for the selected option */
+        .option-item.selected {
+            border-left-color: var(--primary-color);
+            background-color: #eaf5fc; /* A light blue to indicate selection */
+            font-weight: bold;
+        }
+
+        /* Style for locked options to prevent further clicks */
+        .options-grid.locked .option-item {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .options-grid.locked .option-item:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Ensure the selected item remains prominent when locked */
+        .options-grid.locked .option-item.selected {
+            opacity: 1;
+        }
+
+        .option-text strong {
+            margin-right: 1rem;
+        }
+        
+        .vote-counter {
+            display: none; /* Hides the counter from view */
+        }
+        
+        #action-section {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            padding: 1rem 2rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            background-color: var(--primary-color);
+            transition: background-color 0.3s ease;
+            min-height: 70px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        #student-vote-counter {
+            margin-left: 10px;
+            font-weight: 400;
+            font-size: 1.6rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 5px;
+        }
+        
+        #results-container {
+            width: 100%;
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .result-bar-wrapper {
+            width: 100%;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .result-bar {
+            height: 60px;
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            font-weight: bold;
+            font-size: 1.6rem;
+            padding-left: 20px;
+            white-space: nowrap;
+            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        #bar-a { background-color: var(--bar-a-color); }
+        #bar-b { background-color: var(--bar-b-color); }
+        #bar-c { background-color: var(--bar-c-color); }
+        #bar-d { background-color: var(--bar-d-color); }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #final-screen h1 {
+            font-size: 4rem;
+        }
+        
+        #final-summary-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .final-bar {
+            height: 60px;
+            width: 0%;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            border-radius: 0 10px 10px 0;
+            color: white;
+            font-weight: bold;
+            font-size: 1.6rem;
+            white-space: nowrap;
+        }
+        
+        #navigation-section {
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            h1 { font-size: 3rem; }
+            #question-text { font-size: 2.2rem; min-height: 120px; }
+            .options-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .option-item { font-size: 1.8rem; }
+            .button { font-size: 2rem; padding: 1rem 2rem; }
+            .result-bar { height: 60px; font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="app-content">
+            <h1 id="app-title">Enquete da Geração Z</h1>
+             <div id="navigation-section" class="navigation-section">
+                 <button id="next-button" class="button hidden">Próxima Pergunta →</button>
+            </div>
+            <p id="question-counter"></p>
+            <p id="question-text"></p>
+
+            <div class="options-grid" id="options-container">
+                <div class="option-item" id="option-a" data-option="a">
+                    <div class="option-text"></div>
+                    <span class="vote-counter">0</span>
+                </div>
+                 <div class="option-item" id="option-b" data-option="b">
+                    <div class="option-text"></div>
+                    <span class="vote-counter">0</span>
+                </div>
+                 <div class="option-item" id="option-c" data-option="c">
+                    <div class="option-text"></div>
+                    <span class="vote-counter">0</span>
+                </div>
+                 <div class="option-item" id="option-d" data-option="d">
+                    <div class="option-text"></div>
+                    <span class="vote-counter">0</span>
+                </div>
+            </div>
+            
+            <div id="action-section">
+                <button id="next-student-button" class="button hidden">Próximo Aluno <span id="student-vote-counter"></span></button>
+                <button id="generate-button" class="button">📊 Gerar Resultado</button>
+            </div>
+            
+            <div id="results-container" class="hidden">
+                <div class="result-bar-wrapper"><div class="result-bar" id="bar-a"></div></div>
+                <div class="result-bar-wrapper"><div class="result-bar" id="bar-b"></div></div>
+                <div class="result-bar-wrapper"><div class="result-bar" id="bar-c"></div></div>
+                <div class="result-bar-wrapper"><div class="result-bar" id="bar-d"></div></div>
+            </div>
+
+        </div>
+
+        <div id="final-screen" class="hidden">
+            <h1>Pesquisa Concluída!</h1>
+            <p style="font-size: 2rem; margin-bottom: 2rem;">Obrigado por participar.</p>
+            <div id="final-summary-container" style="width: 100%;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const questions = [
+                {
+                    pillar: "Trabalho",
+                    question: "O que é mais importante para você em uma carreira futura?",
+                    options: {
+                        a: "Um propósito forte, mesmo com salário menor.",
+                        b: "Estabilidade financeira e um bom salário.",
+                        c: "Flexibilidade de horários e home office.",
+                        d: "Oportunidades rápidas de crescimento."
+                    }
+                },
+                {
+                    pillar: "Casa Própria",
+                    question: "Pensando no futuro, qual seu maior desejo?",
+                    options: {
+                        a: "Comprar minha casa própria o mais cedo possível.",
+                        b: "Investir em viagens e experiências de vida.",
+                        c: "Morar de aluguuel para ter liberdade de mudar.",
+                        d: "Abrir meu próprio negócio ou investir."
+                    }
+                },
+                {
+                    pillar: "Autonomia",
+                    question: "Com que idade você se imagina saindo da casa dos seus pais?",
+                    options: {
+                        a: "Logo após terminar o Ensino Médio.",
+                        b: "Depois de concluir uma faculdade.",
+                        c: "Somente quando tiver total independência financeira.",
+                        d: "Não tenho pressa, gosto da vida em família."
+                    }
+                },
+                {
+                    pillar: "Saúde Mental",
+                    question: "Como você lida com ansiedade e estresse?",
+                    options: {
+                        a: "Converso abertamente com amigos e família.",
+                        b: "Prefiro guardar para mim e resolver sozinho.",
+                        c: "Busco ajuda profissional ou pesquiso online.",
+                        d: "Uso hobbies, esportes ou jogos para me distrair."
+                    }
+                },
+                {
+                    pillar: "Planos de Família",
+                    question: "Sobre ter filhos no futuro, você pensa em...",
+                    options: {
+                        a: "Ter filhos mais jovem, é uma prioridade.",
+                        b: "Ter filhos apenas após estabilizar a carreira.",
+                        c: "Não ter filhos, para focar em outros objetivos.",
+                        d: "Ainda não sei, é uma decisão para o futuro."
+                    }
+                },
+                {
+                    pillar: "Preocupação Climática",
+                    question: "As mudanças climáticas influenciam suas escolhas diárias?",
+                    options: {
+                        a: "Muito, busco ativamente ser mais sustentável.",
+                        b: "Um pouco, faço o básico como reciclar.",
+                        c: "Pouco, acredito ser um problema para governos.",
+                        d: "Nada, tenho outras preocupações mais urgentes."
+                    }
+                },
+                 {
+                    pillar: "Vida Digital",
+                    question: "Sua vida online (redes sociais, jogos) é mais uma fonte de...?",
+                    options: {
+                        a: "Conexão com amigos e diversão.",
+                        b: "Pressão por aparência e conquistas.",
+                        c: "Informação, notícias e aprendizado.",
+                        d: "Distração e uma forma de passar o tempo."
+                    }
+                },
+                {
+                    pillar: "Trabalho",
+                    question: "Qual modelo de trabalho você prefere?",
+                    options: {
+                        a: "Um emprego tradicional (CLT) em uma empresa.",
+                        b: "Ser autônomo ou freelancer.",
+                        c: "Abrir e gerenciar meu próprio negócio.",
+                        d: "Trabalhar para uma startup inovadora."
+                    }
+                },
+                {
+                    pillar: "Saúde Mental",
+                    question: "Você se sentiria confortável em faltar à aula/trabalho por um dia de estresse mental?",
+                    options: {
+                        a: "Sim, saúde mental é tão importante quanto a física.",
+                        b: "Não, acharia que é uma desculpa ou fraqueza.",
+                        c: "Talvez, mas com medo de ser julgado.",
+                        d: "Sim, mas não diria o motivo real."
+                    }
+                },
+                {
+                    pillar: "Casa Própria",
+                    question: "Para você, o que significa 'ter sucesso' na vida adulta?",
+                    options: {
+                        a: "Ter uma casa e um carro quitados.",
+                        b: "Ter liberdade para viajar e trabalhar de onde quiser.",
+                        c: "Ter um impacto positivo na comunidade.",
+                        d: "Estar feliz e mentalmente saudável, independente do dinheiro."
+                    }
+                },
+                {
+                    pillar: "Planos de Família",
+                    question: "O conceito de casamento tradicional é importante para você?",
+                    options: {
+                        a: "Sim, sonho em casar na igreja e formar uma família.",
+                        b: "Sim, mas prefiro uma cerimônia mais moderna e pessoal.",
+                        c: "Não, prefiro morar junto sem formalidades.",
+                        d: "Não é uma prioridade na minha vida."
+                    }
+                },
+                {
+                    pillar: "Vida Digital",
+                    question: "Qual o impacto das redes sociais na sua auto-estima?",
+                    options: {
+                        a: "Positivo, me sinto conectado e inspirado.",
+                        b: "Negativo, muitas vezes me comparo com os outros.",
+                        c: "Neutro, uso de forma consciente e controlada.",
+                        d: "Varia muito, depende do dia e do conteúdo."
+                    }
+                }
+            ];
+
+            let currentQuestionIndex = 0;
+            let allResults = [];
+            let currentVotes = { a: 0, b: 0, c: 0, d: 0 };
+            let studentHasVoted = false;
+            let studentVoteCount = 0;
+
+            const questionCounterEl = document.getElementById('question-counter');
+            const questionTextEl = document.getElementById('question-text');
+            
+            const optionItems = document.querySelectorAll('.option-item');
+            const voteCounters = document.querySelectorAll('.vote-counter');
+
+            const actionSection = document.getElementById('action-section');
+            const resultsContainer = document.getElementById('results-container');
+            const optionsContainer = document.getElementById('options-container');
+
+            const barA = document.getElementById('bar-a');
+            const barB = document.getElementById('bar-b');
+            const barC = document.getElementById('bar-c');
+            const barD = document.getElementById('bar-d');
+            
+            const generateButton = document.getElementById('generate-button');
+            const nextButton = document.getElementById('next-button');
+            const nextStudentButton = document.getElementById('next-student-button');
+            const studentVoteCounterEl = document.getElementById('student-vote-counter');
+            
+            const appContentEl = document.getElementById('app-content');
+            const finalScreenEl = document.getElementById('final-screen');
+
+            function resetForNextStudent() {
+                studentHasVoted = false;
+                optionItems.forEach(item => item.classList.remove('selected'));
+                optionsContainer.classList.remove('locked');
+                nextStudentButton.classList.add('hidden');
+            }
+
+            function loadQuestion(index) {
+                resultsContainer.classList.add('hidden');
+                actionSection.classList.remove('hidden');
+                optionsContainer.classList.remove('hidden');
+                
+                [barA, barB, barC, barD].forEach(bar => {
+                    bar.style.width = '0%';
+                    bar.textContent = '';
+                });
+
+                currentVotes = { a: 0, b: 0, c: 0, d: 0 };
+                studentVoteCount = 0;
+                studentVoteCounterEl.textContent = '';
+                voteCounters.forEach(counter => counter.textContent = '0');
+                resetForNextStudent();
+                nextButton.classList.add('hidden');
+                generateButton.classList.remove('hidden');
+
+                const question = questions[index];
+                questionCounterEl.textContent = `Pergunta ${index + 1} de ${questions.length}`;
+                questionTextEl.textContent = question.question;
+                
+                document.querySelector('#option-a .option-text').innerHTML = `<strong>A)</strong> ${question.options.a}`;
+                document.querySelector('#option-b .option-text').innerHTML = `<strong>B)</strong> ${question.options.b}`;
+                document.querySelector('#option-c .option-text').innerHTML = `<strong>C)</strong> ${question.options.c}`;
+                document.querySelector('#option-d .option-text').innerHTML = `<strong>D)</strong> ${question.options.d}`;
+            }
+            
+            function handleVote(optionKey) {
+                if (studentHasVoted) {
+                    return; // Prevent multiple votes from one student
+                }
+                studentHasVoted = true;
+                
+                currentVotes[optionKey]++;
+                studentVoteCount++;
+                
+                studentVoteCounterEl.textContent = `(${studentVoteCount} ${studentVoteCount === 1 ? 'aluno votou' : 'alunos votaram'})`;
+                
+                // Visual feedback
+                document.getElementById(`option-${optionKey}`).classList.add('selected');
+                optionsContainer.classList.add('locked');
+                
+                // Show next student button
+                nextStudentButton.classList.remove('hidden');
+            }
+
+            function generateResults() {
+                const { a: votesA, b: votesB, c: votesC, d: votesD } = currentVotes;
+                const totalVotes = votesA + votesB + votesC + votesD;
+
+                if (totalVotes === 0) {
+                    alert("Nenhum voto foi registrado. Toque em uma opção para votar.");
+                    return;
+                }
+                
+                const currentPillar = questions[currentQuestionIndex].pillar;
+                allResults.push({ pillar: currentPillar, votes: totalVotes });
+
+                actionSection.classList.add('hidden');
+                optionsContainer.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
+
+                const percA = (votesA / totalVotes) * 100;
+                const percB = (votesB / totalVotes) * 100;
+                const percC = (votesC / totalVotes) * 100;
+                const percD = (votesD / totalVotes) * 100;
+
+                const resultsData = [
+                    { bar: barA, votes: votesA, perc: percA.toFixed(1), label: "A" },
+                    { bar: barB, votes: votesB, perc: percB.toFixed(1), label: "B" },
+                    { bar: barC, votes: votesC, perc: percC.toFixed(1), label: "C" },
+                    { bar: barD, votes: votesD, perc: percD.toFixed(1), label: "D" },
+                ];
+
+                setTimeout(() => {
+                    resultsData.forEach(data => {
+                        data.bar.style.width = `${data.perc}%`;
+                        data.bar.textContent = `${data.label}) ${data.votes} votos (${data.perc}%)`;
+                    });
+                    nextButton.classList.remove('hidden');
+                }, 100);
+            }
+
+            function showNextQuestion() {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion(currentQuestionIndex);
+                } else {
+                    displayFinalSummary();
+                    appContentEl.classList.add('hidden');
+                    finalScreenEl.classList.remove('hidden');
+                }
+            }
+            
+            function displayFinalSummary() {
+                const pillarTotals = {};
+                allResults.forEach(result => {
+                    if (pillarTotals[result.pillar]) {
+                        pillarTotals[result.pillar] += result.votes;
+                    } else {
+                        pillarTotals[result.pillar] = result.votes;
+                    }
+                });
+
+                const summaryContainer = document.getElementById('final-summary-container');
+                summaryContainer.innerHTML = '<h2>Resultados Gerais por Pilar</h2>';
+
+                const pillarEntries = Object.entries(pillarTotals);
+                const maxVotes = Math.max(...Object.values(pillarTotals));
+                
+                const pillarColors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628'];
+
+                pillarEntries.forEach(([pillar, votes], index) => {
+                    const percentage = (maxVotes > 0) ? (votes / maxVotes) * 100 : 0;
+                    const color = pillarColors[index % pillarColors.length];
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'result-bar-wrapper';
+
+                    const bar = document.createElement('div');
+                    bar.className = 'final-bar';
+                    bar.style.backgroundColor = color;
+                    bar.textContent = `${pillar}: ${votes} votos`;
+                    
+                    wrapper.appendChild(bar);
+                    summaryContainer.appendChild(wrapper);
+
+                    setTimeout(() => {
+                        bar.style.width = `${percentage}%`;
+                    }, 100 * (index + 1));
+                });
+            }
+
+            optionItems.forEach(item => {
+                item.addEventListener('click', () => handleVote(item.dataset.option));
+            });
+            generateButton.addEventListener('click', generateResults);
+            nextButton.addEventListener('click', showNextQuestion);
+            nextStudentButton.addEventListener('click', resetForNextStudent);
+
+            // Initial load
+            loadQuestion(currentQuestionIndex);
+        });
+    </script>
+</body>
+</html>
