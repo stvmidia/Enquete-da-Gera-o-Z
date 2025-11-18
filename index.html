@@ -182,9 +182,10 @@
         }
 
         .question-text {
-            font-size: 3.5rem; /* AUMENTADO: De volta ao tamanho grande */
+            font-size: 2.2rem; /* Tamanho ajustado para caber na tela */
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            margin-top: 10px;
             line-height: 1.2;
             color: var(--text-color);
             font-weight: 800; /* Extra bold */
@@ -217,18 +218,14 @@
             line-height: 1.3;
         }
 
+        /* Hover sutil apenas para indicar clicável, mas sem revelar muito */
         .option-card:hover {
             background-color: var(--accent-hover);
             border-color: #94a3b8;
             transform: translateY(-2px);
         }
 
-        .option-card.selected {
-            border-color: var(--highlight-color);
-            background-color: var(--text-color); /* Fundo escuro para contraste máximo */
-            color: white;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
-        }
+        /* REMOVIDO: .option-card.selected - Não queremos mostrar qual foi selecionado */
 
         .opt-letter {
             display: flex;
@@ -252,13 +249,6 @@
         #opt-c .opt-letter { color: var(--color-c); border-color: var(--color-c); }
         #opt-d .opt-letter { color: var(--color-d); border-color: var(--color-d); }
 
-        /* Quando selecionado, muda o estilo da bolinha */
-        .option-card.selected .opt-letter {
-            background-color: var(--highlight-color);
-            color: white;
-            border-color: white;
-        }
-
         .controls {
             display: flex;
             justify-content: center;
@@ -269,6 +259,17 @@
             flex-shrink: 0; /* Impede que os botões sejam esmagados */
             border-top: 1px solid #eee; /* Separação visual sutil */
             background-color: var(--card-bg); /* Garante fundo sólido */
+            align-items: center;
+        }
+
+        #vote-counter-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--highlight-color);
+            background: #f0f9ff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #bae6fd;
         }
 
         .action-btn {
@@ -281,7 +282,7 @@
             border-radius: 15px;
             cursor: pointer;
             transition: opacity 0.2s;
-            display: none;
+            display: inline-flex; /* Sempre visível no fluxo de professor */
             box-shadow: 0 6px 0 #1e40af; /* Botão 3D */
             align-items: center;
         }
@@ -455,6 +456,33 @@
             border: 2px solid #cbd5e1;
             font-size: 1.1rem;
         }
+        
+        /* VOTE CONFIRMATION MODAL (Privacy) */
+        #vote-confirmation-modal {
+            background-color: rgba(255, 255, 255, 0.95); /* Fundo opaco para esconder a tela */
+            z-index: 2000;
+        }
+        
+        #vote-confirmation-content {
+            text-align: center;
+            animation: popIn 0.3s ease-out;
+        }
+        
+        #vote-confirmation-content h2 {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        
+        #vote-confirmation-content p {
+            font-size: 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
@@ -527,7 +555,8 @@
             </div>
 
             <div class="controls">
-                <button id="next-student-btn" class="action-btn">Próximo Aluno</button>
+                <div id="vote-counter-display" style="display:none;">Votos Registrados: 0</div>
+                <!-- Botão de Próximo Aluno REMOVIDO pois o fluxo agora é automático/privado -->
                 <button id="generate-btn" class="action-btn">📊 Ver Gráfico</button>
                 <button id="next-question-btn" class="action-btn">Próxima Questão ➔</button>
             </div>
@@ -607,6 +636,14 @@
                 <button id="cancel-delete-modal-btn" style="flex:1; background-color:#e2e8f0; color:#0f172a; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:1.1rem; font-weight:bold;">Cancelar</button>
                 <button id="confirm-delete-action-btn" style="flex:1; background-color:#ef4444; color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:1.1rem; font-weight:bold;">Sim, Excluir</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- VOTE CONFIRMATION POPUP (PRIVACY) -->
+    <div id="vote-confirmation-modal" class="modal">
+        <div id="vote-confirmation-content">
+            <h2>✅ Resposta Coletada!</h2>
+            <p>Próximo aluno, por favor...</p>
         </div>
     </div>
 
@@ -761,10 +798,10 @@
         const optionItems = document.querySelectorAll('.option-card');
         
         const startButton = document.getElementById('start-btn');
-        const nextStudentButton = document.getElementById('next-student-btn');
         const generateButton = document.getElementById('generate-btn');
         const nextQuestionButton = document.getElementById('next-question-btn');
         const restartButton = document.getElementById('restart-btn');
+        const voteCounterDisplay = document.getElementById('vote-counter-display');
 
         const settingsModal = document.getElementById('settings-modal');
         const closeSettingsBtn = document.getElementById('close-settings-btn');
@@ -786,6 +823,8 @@
         const deleteModal = document.getElementById('delete-modal');
         const cancelDeleteModalBtn = document.getElementById('cancel-delete-modal-btn');
         const confirmDeleteActionBtn = document.getElementById('confirm-delete-action-btn');
+        
+        const voteConfirmationModal = document.getElementById('vote-confirmation-modal');
 
         // --- INITIALIZATION ---
         function saveQuestions() {
@@ -820,12 +859,15 @@
             questionView.style.display = 'flex';
             optionsGrid.style.display = 'grid';
             chartContainer.style.display = 'none';
-            generateButton.style.display = 'none';
+            
+            // Reset Controls
+            generateButton.style.display = 'inline-flex';
             nextQuestionButton.style.display = 'none';
-            nextStudentButton.style.display = 'none'; 
+            voteCounterDisplay.style.display = 'inline-flex';
             
             votes = { a: 0, b: 0, c: 0, d: 0 };
             totalVotes = 0;
+            updateVoteCounter();
 
             progressText.textContent = `Questão ${currentQuestionIndex + 1} / ${questions.length}`;
             questionText.textContent = q.question;
@@ -841,33 +883,41 @@
                 opt.style.pointerEvents = 'auto';
             });
         }
-
-        function handleVote(selectedOption) {
-            votes[selectedOption]++;
-            totalVotes++;
-            
-            optionItems.forEach(opt => opt.classList.remove('selected'));
-            document.querySelector(`[data-option="${selectedOption}"]`).classList.add('selected');
-
-            optionItems.forEach(opt => opt.style.pointerEvents = 'none');
-
-            nextStudentButton.style.display = 'inline-flex';
-            nextStudentButton.textContent = `Próximo Aluno (${totalVotes})`;
-            generateButton.style.display = 'inline-flex';
+        
+        function updateVoteCounter() {
+            voteCounterDisplay.textContent = `Votos Registrados: ${totalVotes}`;
         }
 
-        function resetForNextStudent() {
-            optionItems.forEach(opt => {
-                opt.classList.remove('selected');
-                opt.style.pointerEvents = 'auto';
-            });
-            nextStudentButton.style.display = 'none';
+        function handleVote(selectedOption) {
+            // 1. Registra o voto
+            votes[selectedOption]++;
+            totalVotes++;
+            updateVoteCounter();
+            
+            // 2. PRIVACIDADE: NÃO adiciona classe .selected visualmente
+            // 3. Mostra popup de confirmação neutro que bloqueia a tela
+            showVoteConfirmation();
+        }
+
+        function showVoteConfirmation() {
+            // Bloqueia cliques
+            optionItems.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            // Mostra modal de feedback
+            voteConfirmationModal.classList.add('visible');
+            
+            // Esconde automaticamente após 1.5 segundos e reseta para o próximo aluno
+            setTimeout(() => {
+                voteConfirmationModal.classList.remove('visible');
+                // Reabilita cliques para o próximo aluno
+                optionItems.forEach(opt => opt.style.pointerEvents = 'auto');
+            }, 1500);
         }
 
         function generateResults() {
             optionsGrid.style.display = 'none';
             chartContainer.style.display = 'flex';
-            nextStudentButton.style.display = 'none';
+            voteCounterDisplay.style.display = 'none';
             generateButton.style.display = 'none';
             nextQuestionButton.style.display = 'inline-flex';
 
@@ -1130,7 +1180,7 @@
         cancelDeleteModalBtn.addEventListener('click', closeDeleteModal);
         confirmDeleteActionBtn.addEventListener('click', executeDelete);
         optionItems.forEach(item => item.addEventListener('click', () => handleVote(item.dataset.option)));
-        nextStudentButton.addEventListener('click', resetForNextStudent);
+        // Removed nextStudentButton listener
         generateButton.addEventListener('click', generateResults);
         nextQuestionButton.addEventListener('click', showNextQuestion);
 
