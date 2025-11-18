@@ -127,6 +127,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Sombra mais leve */
             position: relative;
             border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden; /* Ensure content doesn't spill out */
         }
 
         .question-text {
@@ -186,6 +187,7 @@
             gap: 20px;
             margin-top: 20px;
             height: 60px;
+            flex-shrink: 0;
         }
 
         .action-btn {
@@ -254,19 +256,74 @@
         /* --- RESULTS SCREEN --- */
         #final-screen {
             display: none;
-            text-align: center;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
         }
 
         #final-screen h2 {
             font-size: 3rem;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: var(--highlight-color);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        #results-summary {
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-right: 10px; /* Space for scrollbar */
+        }
+
+        /* Custom Scrollbar */
+        #results-summary::-webkit-scrollbar {
+            width: 8px;
+        }
+        #results-summary::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        #results-summary::-webkit-scrollbar-thumb {
+            background-color: #ccc; 
+            border-radius: 20px;
         }
 
         .pillar-result {
-            font-size: 1.5rem;
-            margin: 10px 0;
-            color: var(--secondary-text);
+            background-color: white;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-left: 6px solid var(--highlight-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border: 1px solid #f0f0f0;
+            text-align: left; /* Align text to left */
+        }
+        
+        .pillar-result:hover {
+            transform: translateX(5px);
+            background-color: #fafafa;
+        }
+
+        .pillar-result strong {
+            display: block;
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .pillar-result span {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-color);
+            line-height: 1.4;
         }
 
         /* --- MODALS --- */
@@ -556,7 +613,9 @@
             <div id="final-screen">
                 <h2>Pesquisa Concluída!</h2>
                 <div id="results-summary"></div>
-                <button id="restart-btn" class="action-btn" style="display: inline-block; margin-top: 20px;">🏠 Início</button>
+                <div style="text-align: center; flex-shrink: 0;">
+                    <button id="restart-btn" class="action-btn" style="display: inline-block; margin-top: 20px;">🏠 Início</button>
+                </div>
             </div>
 
             <div class="controls">
@@ -647,41 +706,130 @@
         // --- DATA & STATE ---
         const defaultQuestions = [
             {
-                pillar: "Flexibilidade no Trabalho",
-                question: "O que é mais importante para você ao escolher um emprego?",
-                options: { a: "Salário alto", b: "Home office/Híbrido", c: "Propósito da empresa", d: "Estabilidade" }
+                pillar: "Trabalho - Propósito",
+                question: "O que faria você recusar uma oferta de emprego com um salário alto?",
+                options: { 
+                    a: "Se o local fosse longe da minha casa.", 
+                    b: "Se o ambiente fosse tóxico e prejudicasse minha saúde mental.", 
+                    c: "Se o trabalho fosse chato e sem propósito, mesmo pagando bem.", 
+                    d: "Eu não recusaria, salário alto é o mais importante." 
+                }
             },
             {
-                pillar: "Saúde Mental",
-                question: "Como você lida com o estresse no dia a dia?",
-                options: { a: "Redes sociais", b: "Esportes/Exercícios", c: "Conversar com amigos", d: "Isolamento" }
+                pillar: "Trabalho - Estabilidade",
+                question: "Imagine que você está em um emprego estável, mas infeliz. Qual seria sua atitude mais provável?",
+                options: { 
+                    a: "Ficaria no emprego pela segurança financeira.", 
+                    b: "Começaria a procurar outro discretamente, mas só sairia com contrato assinado.", 
+                    c: "Pediria demissão imediatamente para focar em mim mesmo(a).", 
+                    d: "Tentaria mudar de setor dentro da mesma empresa." 
+                }
             },
             {
-                pillar: "Consumo e Sustentabilidade",
-                question: "Você pagaria mais caro por um produto sustentável?",
-                options: { a: "Sim, sempre", b: "Depende do preço", c: "Raramente", d: "Não, prefiro o mais barato" }
+                pillar: "Casa Própria - Prioridades",
+                question: "Se você recebesse R$ 100.000,00 hoje, qual seria seu principal investimento?",
+                options: { 
+                    a: "Daria entrada na compra de uma casa ou terreno.", 
+                    b: "Investiria em viagens internacionais e experiências de vida.", 
+                    c: "Investiria na minha educação ou abriria meu próprio negócio.", 
+                    d: "Compraria um carro de luxo ou eletrônicos de última geração." 
+                }
             },
             {
-                pillar: "Tecnologia e IA",
-                question: "Qual seu maior medo em relação à Inteligência Artificial?",
-                options: { a: "Perder o emprego", b: "Privacidade de dados", c: "Falta de criatividade humana", d: "Não tenho medo" }
+                pillar: "Casa Própria - Sonho",
+                question: "Como você vê a questão da \"Casa Própria\"?",
+                options: { 
+                    a: "É meu maior sonho, não me vejo pagando aluguel para sempre.", 
+                    b: "É importante, mas não é minha prioridade agora.", 
+                    c: "Prefiro viver de aluguel e ter liberdade para mudar de cidade/país.", 
+                    d: "Acho que é um investimento ruim comparado a outras opções." 
+                }
             },
             {
-                pillar: "Diversidade e Inclusão",
-                question: "O quão importante é trabalhar em uma equipe diversa para você?",
-                options: { a: "Essencial", b: "Importante", c: "Indiferente", d: "Prefiro pessoas parecidas comigo" }
+                pillar: "Autonomia",
+                question: "Para você, o que define uma pessoa \"bem-sucedida\"?",
+                options: { 
+                    a: "Ter muito dinheiro e bens materiais (casa, carro).", 
+                    b: "Ter liberdade de tempo e poder trabalhar de onde quiser.", 
+                    c: "Ter uma família grande e unida.", 
+                    d: "Ser famoso(a) ou reconhecido(a) na internet." 
+                }
             },
             {
-                pillar: "Educação e Futuro",
-                question: "Qual formato de aprendizado você prefere?",
-                options: { a: "Vídeos curtos (TikTok/Reels)", b: "Cursos online longos", c: "Presencial prático", d: "Leitura de livros/artigos" }
+                pillar: "Saúde Mental - Abertura",
+                question: "Você se sente confortável para conversar sobre seus sentimentos e ansiedades com sua família?",
+                options: { 
+                    a: "Sim, converso abertamente sobre tudo.", 
+                    b: "Mais ou menos, seleciono o que falo.", 
+                    c: "Não, meus pais não entendem essas questões.", 
+                    d: "Prefiro conversar apenas com amigos ou na internet." 
+                }
             },
             {
-                pillar: "Relacionamentos",
-                question: "Onde você costuma fazer novas amizades?",
-                options: { a: "Escola/Faculdade", b: "Jogos online", c: "Redes Sociais", d: "Festas/Eventos" }
+                pillar: "Saúde Mental - Pressão",
+                question: "O que mais te causa ansiedade em relação ao futuro?",
+                options: { 
+                    a: "Medo de não conseguir emprego ou dinheiro suficiente.", 
+                    b: "A pressão para decidir logo o que fazer da vida.", 
+                    c: "As mudanças climáticas e o futuro do planeta.", 
+                    d: "A solidão e a dificuldade de ter relacionamentos duradouros." 
+                }
+            },
+            {
+                pillar: "Planos de Família",
+                question: "Como você imagina sua vida aos 30 anos em relação à família?",
+                options: { 
+                    a: "Casado(a) e com filhos.", 
+                    b: "Em um relacionamento sério, mas sem filhos.", 
+                    c: "Solteiro(a) e focado(a) totalmente na carreira/viagens.", 
+                    d: "Morando com amigos ou com os pais, sem pressa." 
+                }
+            },
+            {
+                pillar: "Planos de Família - Filhos",
+                question: "A ideia de ter filhos no futuro é:",
+                options: { 
+                    a: "Uma certeza, quero muito ser pai/mãe.", 
+                    b: "Uma dúvida, depende muito da minha condição financeira.", 
+                    c: "Uma possibilidade distante, não penso nisso agora.", 
+                    d: "Algo que não pretendo, prefiro não ter filhos." 
+                }
+            },
+            {
+                pillar: "Preocupação Climática",
+                question: "As notícias sobre aquecimento global e desastres ambientais afetam suas decisões de futuro (como onde morar ou ter filhos)?",
+                options: { 
+                    a: "Sim, penso muito nisso e tenho medo do futuro.", 
+                    b: "Preocupa um pouco, mas tento seguir minha vida normal.", 
+                    c: "Não influencia, acho que a tecnologia vai resolver.", 
+                    d: "Não acompanho muito esse assunto." 
+                }
+            },
+            {
+                pillar: "Vida Digital - Carreira",
+                question: "Você consideraria ser um influenciador digital ou YouTuber como sua carreira principal?",
+                options: { 
+                    a: "Sim, é meu sonho trabalhar com internet.", 
+                    b: "Talvez, se fosse como uma renda extra.", 
+                    c: "Não, prefiro uma profissão \"tradicional\" (médico, advogado, engenheiro, etc).", 
+                    d: "Não, detesto me expor nas redes sociais." 
+                }
+            },
+            {
+                pillar: "Comparação Geracional",
+                question: "Comparando com a época dos seus pais, você acha que para a sua geração:",
+                options: { 
+                    a: "É mais difícil conquistar bens materiais (casa, carro).", 
+                    b: "É mais fácil ganhar dinheiro, pois há mais opções na internet.", 
+                    c: "É mais difícil ter saúde mental e estabilidade emocional.", 
+                    d: "É melhor, pois temos mais liberdade e menos preconceito." 
+                }
             }
         ];
+        
+        // FORCE CLEAR OLD QUESTIONS FOR THIS UPDATE
+        // Remove this line in production if you want to persist changes
+        localStorage.removeItem('pollQuestions');
 
         let questions = JSON.parse(localStorage.getItem('pollQuestions')) || defaultQuestions;
         let currentQuestionIndex = 0;
@@ -875,13 +1023,20 @@
 
         function showFinalScreen() {
             questionView.style.display = 'none';
-            finalScreen.style.display = 'block';
+            finalScreen.style.display = 'flex'; // Change to flex to support full height layout
             progressText.textContent = "Concluído";
             
             const summaryContainer = document.getElementById('results-summary');
+            
+            if (sessionResults.length === 0) {
+                 summaryContainer.innerHTML = '<p style="text-align:center; color:var(--secondary-text); padding: 20px;">Nenhum resultado registrado.</p>';
+                 return;
+            }
+
             summaryContainer.innerHTML = sessionResults.map(r => `
                 <div class="pillar-result">
-                    <strong>${r.pillar}:</strong> ${r.winners}
+                    <strong>${r.pillar}</strong>
+                    <span>${r.winners}</span>
                 </div>
             `).join('');
         }
