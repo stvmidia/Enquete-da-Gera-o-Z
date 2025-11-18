@@ -12,7 +12,7 @@
             
             /* Cores de Ação */
             --accent-color: #f0f4f8;    /* Fundo das opções não selecionadas */
-            --accent-hover: #dfe7ef;    /* Hover */
+            --accent-hover: #f0f4f8;    /* REMOVIDO HOVER DIFERENTE (mesma cor) */
             
             /* Destaques */
             --highlight-color: #2563eb; /* Azul Royal forte (melhor que rosa para leitura em projetor) */
@@ -202,6 +202,13 @@
             width: 100%;
         }
 
+        /* 
+           PRIVACIDADE TOTAL:
+           Removida transição de background.
+           Removido efeito de hover de cor.
+           Removido efeito de active de cor.
+           O botão não muda de cor JAMAIS.
+        */
         .option-card {
             background-color: var(--accent-color);
             color: var(--text-color);
@@ -210,7 +217,7 @@
             font-size: 2.2rem; /* AUMENTADO: Fonte bem grande */
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.2s;
+            transition: transform 0.1s; /* Apenas movimento, nada de cor */
             text-align: left;
             border: 3px solid transparent; /* Prepara borda para não pular layout */
             display: flex;
@@ -223,30 +230,24 @@
             -webkit-touch-callout: none !important;
         }
 
-        /* IMPORTANTE: Hover só funciona em dispositivos que têm mouse. 
-           Em touchscreens, evita que o botão fique "preso" na cor de hover após o toque */
-        @media (hover: hover) {
-            .option-card:hover {
-                background-color: var(--accent-hover);
-                border-color: #94a3b8;
-                transform: translateY(-2px);
-            }
-        }
-
-        /* Remove qualquer estilo de foco ou clique persistente (Focus Ring do Chrome/Android) */
-        .option-card:focus, 
+        /* ESTADOS DE CLIQUE E FOCO FORÇADOS A SEREM NEUTROS */
+        .option-card:hover,
         .option-card:active, 
-        .option-card:focus-visible {
-            outline: none !important;
+        .option-card:focus, 
+        .option-card:focus-visible,
+        .option-card:visited {
+            background-color: var(--accent-color) !important; /* Força a MESMA cor original */
             border-color: transparent !important;
-            background-color: var(--accent-color) !important;
-            box-shadow: 0 5px 0 rgba(0,0,0,0.1) !important;
             color: var(--text-color) !important;
+            outline: none !important;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1) !important; /* Mantém a sombra original */
         }
         
+        /* Único feedback permitido: Movimento físico (apertar o botão) */
         .option-card:active {
-             transform: translateY(2px);
-             box-shadow: none !important;
+             transform: translateY(4px); /* Afunda o botão */
+             box-shadow: none !important; /* Remove a sombra 3D para parecer que afundou */
+             background-color: var(--accent-color) !important; /* GARANTIA FINAL de cor */
         }
 
         .opt-letter {
