@@ -35,6 +35,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Verdana', 'Segoe UI', Tahoma, sans-serif; /* Verdana é excelente para leitura à distância */
+            -webkit-tap-highlight-color: transparent; /* Remove o flash de toque em mobile/touch */
         }
 
         body {
@@ -209,23 +210,44 @@
             font-size: 2.2rem; /* AUMENTADO: Fonte bem grande */
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.1s, background-color 0.2s;
             text-align: left;
             border: 3px solid transparent; /* Prepara borda para não pular layout */
             display: flex;
             align-items: center;
             box-shadow: 0 5px 0 rgba(0,0,0,0.1); /* Sombra sólida */
             line-height: 1.3;
+            user-select: none; /* Impede seleção de texto */
+            outline: none !important; /* Remove anel de foco padrão */
+            -webkit-tap-highlight-color: transparent !important; /* Remove highlight azul em Android/iOS */
+            -webkit-touch-callout: none !important;
         }
 
-        /* Hover sutil apenas para indicar clicável, mas sem revelar muito */
-        .option-card:hover {
-            background-color: var(--accent-hover);
-            border-color: #94a3b8;
-            transform: translateY(-2px);
+        /* IMPORTANTE: Hover só funciona em dispositivos que têm mouse. 
+           Em touchscreens, evita que o botão fique "preso" na cor de hover após o toque */
+        @media (hover: hover) {
+            .option-card:hover {
+                background-color: var(--accent-hover);
+                border-color: #94a3b8;
+                transform: translateY(-2px);
+            }
         }
 
-        /* REMOVIDO: .option-card.selected - Não queremos mostrar qual foi selecionado */
+        /* Remove qualquer estilo de foco ou clique persistente (Focus Ring do Chrome/Android) */
+        .option-card:focus, 
+        .option-card:active, 
+        .option-card:focus-visible {
+            outline: none !important;
+            border-color: transparent !important;
+            background-color: var(--accent-color) !important;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1) !important;
+            color: var(--text-color) !important;
+        }
+        
+        .option-card:active {
+             transform: translateY(2px);
+             box-shadow: none !important;
+        }
 
         .opt-letter {
             display: flex;
@@ -889,6 +911,14 @@
         }
 
         function handleVote(selectedOption) {
+            // CRITICAL FIX: Remove focus from the button immediately to prevent sticky styles (outlines/colors)
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            
+            // Clear any text selection that might have occurred
+            window.getSelection().removeAllRanges();
+
             // 1. Registra o voto
             votes[selectedOption]++;
             totalVotes++;
