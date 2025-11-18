@@ -14,6 +14,10 @@
             --text-color: #2c3e50;
             --primary-color: #3498db;
             --primary-hover: #2980b9;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
+            --secondary-color: #7f8c8d;
+            --secondary-hover: #6c7a7d;
             --input-bg: #ffffff;
             --border-color: #dddddd;
             --bar-a-color: #3498db;
@@ -48,8 +52,55 @@
             margin: 2vh auto 0;
         }
 
+        #welcome-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 1.8rem;
+            max-width: 700px;
+            margin: 1.5rem 0 2.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        #start-button {
+            font-size: 2.2rem;
+            padding: 1.2rem 2.5rem;
+        }
+
         #app-content, #final-screen {
             width: 100%;
+        }
+
+        #app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-btn {
+            background: none;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: scale(1.1);
         }
 
         h1 {
@@ -92,7 +143,7 @@
             align-items: center;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, border-color 0.3s;
-            user-select: none; /* Prevent text selection on click */
+            user-select: none;
         }
 
         .option-item:hover {
@@ -110,23 +161,11 @@
             cursor: not-allowed;
             opacity: 0.6;
         }
+        .options-grid.locked .option-item:hover { transform: none; box-shadow: none; }
+        .options-grid.locked .option-item.selected { opacity: 1; }
 
-        .options-grid.locked .option-item:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .options-grid.locked .option-item.selected {
-            opacity: 1;
-        }
-
-        .option-text strong {
-            margin-right: 1rem;
-        }
-        
-        .vote-counter {
-            display: none;
-        }
+        .option-text strong { margin-right: 1rem; }
+        .vote-counter { display: none; }
         
         #action-section {
             margin: 2rem 0;
@@ -149,11 +188,14 @@
             min-height: 70px;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
         }
+        .button.danger { background-color: var(--danger-color); }
+        .button.danger:hover { background-color: var(--danger-hover); }
+        .button.secondary { background-color: var(--secondary-color); }
+        .button.secondary:hover { background-color: var(--secondary-hover); }
 
-        .button:hover {
-            background-color: var(--primary-hover);
-        }
+        .button:hover { background-color: var(--primary-hover); }
         
         #student-vote-counter {
             margin-left: 10px;
@@ -164,111 +206,51 @@
             border-radius: 5px;
         }
         
-        #results-container {
-            width: 100%;
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .result-item {
-            text-align: left;
-        }
-        
-        .result-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .option-result-text {
-            font-size: 1.8rem;
-            font-weight: 500;
-        }
-
-        .vote-info-text {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #333;
-            white-space: nowrap;
-        }
-        
-        .result-bar-wrapper {
-            width: 100%;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        
-        .result-bar {
-            height: 40px;
-            width: 0%;
-            color: white;
-            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        
+        #results-container { width: 100%; margin-top: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+        .result-item { text-align: left; }
+        .result-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 10px; }
+        .option-result-text { font-size: 1.8rem; font-weight: 500; }
+        .vote-info-text { font-size: 1.6rem; font-weight: bold; color: #333; white-space: nowrap; }
+        .result-bar-wrapper { width: 100%; background-color: #ecf0f1; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
+        .result-bar { height: 40px; width: 0%; color: white; transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1); }
         #bar-a { background-color: var(--bar-a-color); }
         #bar-b { background-color: var(--bar-b-color); }
         #bar-c { background-color: var(--bar-c-color); }
         #bar-d { background-color: var(--bar-d-color); }
+        .hidden { display: none !important; }
 
-        .hidden {
-            display: none !important;
-        }
+        #final-screen h1 { font-size: 4rem; }
+        #final-summary-container h2 { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--text-color); }
+        .pillar-summary-item { margin-bottom: 1.5rem; }
+        .final-bar { height: 60px; width: 0%; display: flex; align-items: center; padding-left: 20px; transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1); border-radius: 0 10px 10px 0; color: white; font-weight: bold; font-size: 1.6rem; white-space: nowrap; }
+        .pillar-description { font-size: 1.4rem; color: #555; text-align: left; margin-top: 0.5rem; padding: 0 5px; }
 
-        #final-screen h1 {
-            font-size: 4rem;
-        }
-        
-        #final-summary-container h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-        }
-        
-        .pillar-summary-item {
-            margin-bottom: 1.5rem;
-        }
+        #navigation-section { margin-top: 2rem; }
+        #home-button { margin-top: 2rem; }
 
-        .final-bar {
-            height: 60px;
-            width: 0%;
-            display: flex;
-            align-items: center;
-            padding-left: 20px;
-            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-            border-radius: 0 10px 10px 0;
-            color: white;
-            font-weight: bold;
-            font-size: 1.6rem;
-            white-space: nowrap;
-        }
-        
-        .pillar-description {
-            font-size: 1.4rem;
-            color: #555;
-            text-align: left;
-            margin-top: 0.5rem;
-            padding: 0 5px;
-        }
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background-color: white; padding: 30px; border-radius: 15px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-content h2 { font-size: 2.2rem; margin-bottom: 1.5rem; color: var(--primary-color); }
+        .modal-actions { margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--border-color);}
 
-        #navigation-section {
-            margin-top: 2rem;
-        }
-        
-        #home-button {
-            margin-top: 2rem;
-        }
+        /* Settings Modal */
+        #questions-list-container { overflow-y: auto; flex-grow: 1; }
+        .question-list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .question-list-item:last-child { border-bottom: none; }
+        .question-list-item p { flex-grow: 1; margin-right: 1rem; }
+        .question-item-actions button { background: none; border: none; font-size: 1.5rem; cursor: pointer; margin-left: 10px; transition: transform 0.2s; }
+        .question-item-actions button:hover { transform: scale(1.2); }
+
+        /* Question Editor Modal */
+        #question-form { display: flex; flex-direction: column; gap: 1rem; }
+        #question-form label { font-weight: 500; text-align: left; }
+        #question-form input, #question-form textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1.2rem; font-family: 'Poppins', sans-serif; }
+        #question-form textarea { resize: vertical; min-height: 80px; }
 
         @media (max-width: 900px) {
-            .container {
-                padding: 20px;
-            }
+            .container { padding: 20px; }
             h1 { font-size: 3rem; }
             #question-text { font-size: 2.2rem; min-height: 120px; }
             .options-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -282,7 +264,17 @@
 <body>
 
     <div class="container">
-        <div id="app-content">
+        <div id="welcome-screen">
+            <h1>Enquete da Geração Z</h1>
+            <p class="welcome-text">Participe desta enquete interativa para entendermos juntos as tendências, preocupações e aspirações da nova geração.</p>
+            <button id="start-button" class="button">🚀 Iniciar Enquete</button>
+        </div>
+
+        <div id="app-content" class="hidden">
+             <div id="app-header">
+                <button id="header-home-button" class="header-btn" title="Voltar ao Início">🏠</button>
+                <button id="settings-button" class="header-btn" title="Configurações">⚙️</button>
+            </div>
             <h1 id="app-title">Enquete da Geração Z</h1>
              <div id="navigation-section" class="navigation-section">
                  <button id="next-button" class="button hidden">Próxima Pergunta →</button>
@@ -291,22 +283,10 @@
             <p id="question-text"></p>
 
             <div class="options-grid" id="options-container">
-                <div class="option-item" id="option-a" data-option="a">
-                    <div class="option-text"></div>
-                    <span class="vote-counter">0</span>
-                </div>
-                 <div class="option-item" id="option-b" data-option="b">
-                    <div class="option-text"></div>
-                    <span class="vote-counter">0</span>
-                </div>
-                 <div class="option-item" id="option-c" data-option="c">
-                    <div class="option-text"></div>
-                    <span class="vote-counter">0</span>
-                </div>
-                 <div class="option-item" id="option-d" data-option="d">
-                    <div class="option-text"></div>
-                    <span class="vote-counter">0</span>
-                </div>
+                <div class="option-item" id="option-a" data-option="a"><div class="option-text"></div></div>
+                <div class="option-item" id="option-b" data-option="b"><div class="option-text"></div></div>
+                <div class="option-item" id="option-c" data-option="c"><div class="option-text"></div></div>
+                <div class="option-item" id="option-d" data-option="d"><div class="option-text"></div></div>
             </div>
             
             <div id="action-section">
@@ -315,36 +295,11 @@
             </div>
             
             <div id="results-container" class="hidden">
-                <div class="result-item">
-                    <div class="result-info">
-                        <p class="option-result-text" id="result-text-a"></p>
-                        <p class="vote-info-text" id="vote-info-a"></p>
-                    </div>
-                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-a"></div></div>
-                </div>
-                <div class="result-item">
-                    <div class="result-info">
-                        <p class="option-result-text" id="result-text-b"></p>
-                        <p class="vote-info-text" id="vote-info-b"></p>
-                    </div>
-                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-b"></div></div>
-                </div>
-                <div class="result-item">
-                    <div class="result-info">
-                        <p class="option-result-text" id="result-text-c"></p>
-                        <p class="vote-info-text" id="vote-info-c"></p>
-                    </div>
-                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-c"></div></div>
-                </div>
-                <div class="result-item">
-                    <div class="result-info">
-                        <p class="option-result-text" id="result-text-d"></p>
-                        <p class="vote-info-text" id="vote-info-d"></p>
-                    </div>
-                    <div class="result-bar-wrapper"><div class="result-bar" id="bar-d"></div></div>
-                </div>
+                <div class="result-item"><div class="result-info"><p class="option-result-text" id="result-text-a"></p><p class="vote-info-text" id="vote-info-a"></p></div><div class="result-bar-wrapper"><div class="result-bar" id="bar-a"></div></div></div>
+                <div class="result-item"><div class="result-info"><p class="option-result-text" id="result-text-b"></p><p class="vote-info-text" id="vote-info-b"></p></div><div class="result-bar-wrapper"><div class="result-bar" id="bar-b"></div></div></div>
+                <div class="result-item"><div class="result-info"><p class="option-result-text" id="result-text-c"></p><p class="vote-info-text" id="vote-info-c"></p></div><div class="result-bar-wrapper"><div class="result-bar" id="bar-c"></div></div></div>
+                <div class="result-item"><div class="result-info"><p class="option-result-text" id="result-text-d"></p><p class="vote-info-text" id="vote-info-d"></p></div><div class="result-bar-wrapper"><div class="result-bar" id="bar-d"></div></div></div>
             </div>
-
         </div>
 
         <div id="final-screen" class="hidden">
@@ -354,198 +309,165 @@
             <button id="home-button" class="button">🏠 Início</button>
         </div>
     </div>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Gerenciar Perguntas</h2>
+            <div id="questions-list-container"></div>
+            <div class="modal-actions">
+                <button id="add-question-btn" class="button">Adicionar Nova Pergunta</button>
+                <button id="close-settings-btn" class="button secondary">Fechar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Question Editor Modal -->
+    <div id="question-editor-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="editor-title">Editar Pergunta</h2>
+            <form id="question-form">
+                <label for="pillar-input">Pilar:</label>
+                <input type="text" id="pillar-input" required list="pillar-suggestions">
+                <datalist id="pillar-suggestions"></datalist>
+
+                <label for="question-input">Texto da Pergunta:</label>
+                <textarea id="question-input" required></textarea>
+                
+                <label for="option-a-input">Opção A:</label>
+                <input type="text" id="option-a-input" required>
+                
+                <label for="option-b-input">Opção B:</label>
+                <input type="text" id="option-b-input" required>
+                
+                <label for="option-c-input">Opção C:</label>
+                <input type="text" id="option-c-input" required>
+                
+                <label for="option-d-input">Opção D:</label>
+                <input type="text" id="option-d-input" required>
+
+                <input type="hidden" id="editing-question-index">
+            </form>
+             <div class="modal-actions">
+                <button id="save-question-btn" class="button">Salvar</button>
+                <button id="cancel-edit-btn" class="button secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const questions = [
-                {
-                    pillar: "Trabalho",
-                    question: "O que é mais importante para você em uma carreira futura?",
-                    options: {
-                        a: "Um propósito forte, mesmo com salário menor.",
-                        b: "Estabilidade financeira e um bom salário.",
-                        c: "Flexibilidade de horários e home office.",
-                        d: "Oportunidades rápidas de crescimento."
-                    }
-                },
-                {
-                    pillar: "Casa Própria",
-                    question: "Pensando no futuro, qual seu maior desejo?",
-                    options: {
-                        a: "Comprar minha casa própria o mais cedo possível.",
-                        b: "Investir em viagens e experiências de vida.",
-                        c: "Morar de aluguuel para ter liberdade de mudar.",
-                        d: "Abrir meu próprio negócio ou investir."
-                    }
-                },
-                {
-                    pillar: "Autonomia",
-                    question: "Com que idade você se imagina saindo da casa dos seus pais?",
-                    options: {
-                        a: "Logo após terminar o Ensino Médio.",
-                        b: "Depois de concluir uma faculdade.",
-                        c: "Somente quando tiver total independência financeira.",
-                        d: "Não tenho pressa, gosto da vida em família."
-                    }
-                },
-                {
-                    pillar: "Saúde Mental",
-                    question: "Como você lida com ansiedade e estresse?",
-                    options: {
-                        a: "Converso abertamente com amigos e família.",
-                        b: "Prefiro guardar para mim e resolver sozinho.",
-                        c: "Busco ajuda profissional ou pesquiso online.",
-                        d: "Uso hobbies, esportes ou jogos para me distrair."
-                    }
-                },
-                {
-                    pillar: "Planos de Família",
-                    question: "Sobre ter filhos no futuro, você pensa em...",
-                    options: {
-                        a: "Ter filhos mais jovem, é uma prioridade.",
-                        b: "Ter filhos apenas após estabilizar a carreira.",
-                        c: "Não ter filhos, para focar em outros objetivos.",
-                        d: "Ainda não sei, é uma decisão para o futuro."
-                    }
-                },
-                {
-                    pillar: "Preocupação Climática",
-                    question: "As mudanças climáticas influenciam suas escolhas diárias?",
-                    options: {
-                        a: "Muito, busco ativamente ser mais sustentável.",
-                        b: "Um pouco, faço o básico como reciclar.",
-                        c: "Pouco, acredito ser um problema para governos.",
-                        d: "Nada, tenho outras preocupações mais urgentes."
-                    }
-                },
-                 {
-                    pillar: "Vida Digital",
-                    question: "Sua vida online (redes sociais, jogos) é mais uma fonte de...?",
-                    options: {
-                        a: "Conexão com amigos e diversão.",
-                        b: "Pressão por aparência e conquistas.",
-                        c: "Informação, notícias e aprendizado.",
-                        d: "Distração e uma forma de passar o tempo."
-                    }
-                },
-                {
-                    pillar: "Trabalho",
-                    question: "Qual modelo de trabalho você prefere?",
-                    options: {
-                        a: "Um emprego tradicional (CLT) em uma empresa.",
-                        b: "Ser autônomo ou freelancer.",
-                        c: "Abrir e gerenciar meu próprio negócio.",
-                        d: "Trabalhar para uma startup inovadora."
-                    }
-                },
-                {
-                    pillar: "Saúde Mental",
-                    question: "Você se sentiria confortável em faltar à aula/trabalho por um dia de estresse mental?",
-                    options: {
-                        a: "Sim, saúde mental é tão importante quanto a física.",
-                        b: "Não, acharia que é uma desculpa ou fraqueza.",
-                        c: "Talvez, mas com medo de ser julgado.",
-                        d: "Sim, mas não diria o motivo real."
-                    }
-                },
-                {
-                    pillar: "Casa Própria",
-                    question: "Para você, o que significa 'ter sucesso' na vida adulta?",
-                    options: {
-                        a: "Ter uma casa e um carro quitados.",
-                        b: "Ter liberdade para viajar e trabalhar de onde quiser.",
-                        c: "Ter um impacto positivo na comunidade.",
-                        d: "Estar feliz e mentalmente saudável, independente do dinheiro."
-                    }
-                },
-                {
-                    pillar: "Planos de Família",
-                    question: "O conceito de casamento tradicional é importante para você?",
-                    options: {
-                        a: "Sim, sonho em casar na igreja e formar uma família.",
-                        b: "Sim, mas prefiro uma cerimônia mais moderna e pessoal.",
-                        c: "Não, prefiro morar junto sem formalidades.",
-                        d: "Não é uma prioridade na minha vida."
-                    }
-                },
-                {
-                    pillar: "Vida Digital",
-                    question: "Qual o impacto das redes sociais na sua auto-estima?",
-                    options: {
-                        a: "Positivo, me sinto conectado e inspirado.",
-                        b: "Negativo, muitas vezes me comparo com os outros.",
-                        c: "Neutro, uso de forma consciente e controlada.",
-                        d: "Varia muito, depende do dia e do conteúdo."
-                    }
-                }
+            const defaultQuestions = [
+                { pillar: "Trabalho", question: "O que é mais importante para você em uma carreira futura?", options: { a: "Um propósito forte, mesmo com salário menor.", b: "Estabilidade financeira e um bom salário.", c: "Flexibilidade de horários e home office.", d: "Oportunidades rápidas de crescimento." } },
+                { pillar: "Casa Própria", question: "Pensando no futuro, qual seu maior desejo?", options: { a: "Comprar minha casa própria o mais cedo possível.", b: "Investir em viagens e experiências de vida.", c: "Morar de aluguuel para ter liberdade de mudar.", d: "Abrir meu próprio negócio ou investir." } },
+                { pillar: "Autonomia", question: "Com que idade você se imagina saindo da casa dos seus pais?", options: { a: "Logo após terminar o Ensino Médio.", b: "Depois de concluir uma faculdade.", c: "Somente quando tiver total independência financeira.", d: "Não tenho pressa, gosto da vida em família." } },
+                { pillar: "Saúde Mental", question: "Como você lida com ansiedade e estresse?", options: { a: "Converso abertamente com amigos e família.", b: "Prefiro guardar para mim e resolver sozinho.", c: "Busco ajuda profissional ou pesquiso online.", d: "Uso hobbies, esportes ou jogos para me distrair." } },
+                { pillar: "Planos de Família", question: "Sobre ter filhos no futuro, você pensa em...", options: { a: "Ter filhos mais jovem, é uma prioridade.", b: "Ter filhos apenas após estabilizar a carreira.", c: "Não ter filhos, para focar em outros objetivos.", d: "Ainda não sei, é uma decisão para o futuro." } },
+                { pillar: "Preocupação Climática", question: "As mudanças climáticas influenciam suas escolhas diárias?", options: { a: "Muito, busco ativamente ser mais sustentável.", b: "Um pouco, faço o básico como reciclar.", c: "Pouco, acredito ser um problema para governos.", d: "Nada, tenho outras preocupações mais urgentes." } },
+                { pillar: "Vida Digital", question: "Sua vida online (redes sociais, jogos) é mais uma fonte de...?", options: { a: "Conexão com amigos e diversão.", b: "Pressão por aparência e conquistas.", c: "Informação, notícias e aprendizado.", d: "Distração e uma forma de passar o tempo." } },
             ];
 
+            let questions = [];
             let currentQuestionIndex = 0;
             let allResults = [];
             let currentVotes = { a: 0, b: 0, c: 0, d: 0 };
             let studentHasVoted = false;
             let studentVoteCount = 0;
-
+            
+            // DOM Elements
             const questionCounterEl = document.getElementById('question-counter');
             const questionTextEl = document.getElementById('question-text');
-            
             const optionItems = document.querySelectorAll('.option-item');
-            const voteCounters = document.querySelectorAll('.vote-counter');
-
             const actionSection = document.getElementById('action-section');
             const resultsContainer = document.getElementById('results-container');
             const optionsContainer = document.getElementById('options-container');
-
-            const bars = {
-                a: document.getElementById('bar-a'),
-                b: document.getElementById('bar-b'),
-                c: document.getElementById('bar-c'),
-                d: document.getElementById('bar-d'),
-            };
-
-            const resultTexts = {
-                a: document.getElementById('result-text-a'),
-                b: document.getElementById('result-text-b'),
-                c: document.getElementById('result-text-c'),
-                d: document.getElementById('result-text-d'),
-            };
-
-            const voteInfos = {
-                a: document.getElementById('vote-info-a'),
-                b: document.getElementById('vote-info-b'),
-                c: document.getElementById('vote-info-c'),
-                d: document.getElementById('vote-info-d'),
-            };
-            
             const generateButton = document.getElementById('generate-button');
             const nextButton = document.getElementById('next-button');
             const nextStudentButton = document.getElementById('next-student-button');
             const studentVoteCounterEl = document.getElementById('student-vote-counter');
-            
+            const welcomeScreenEl = document.getElementById('welcome-screen');
+            const startButton = document.getElementById('start-button');
             const appContentEl = document.getElementById('app-content');
             const finalScreenEl = document.getElementById('final-screen');
             const homeButton = document.getElementById('home-button');
+            const headerHomeButton = document.getElementById('header-home-button');
+            
+            // Settings Modal Elements
+            const settingsButton = document.getElementById('settings-button');
+            const settingsModal = document.getElementById('settings-modal');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const addQuestionBtn = document.getElementById('add-question-btn');
+            const questionsListContainer = document.getElementById('questions-list-container');
+            
+            // Editor Modal Elements
+            const questionEditorModal = document.getElementById('question-editor-modal');
+            const editorTitle = document.getElementById('editor-title');
+            const questionForm = document.getElementById('question-form');
+            const saveQuestionBtn = document.getElementById('save-question-btn');
+            const cancelEditBtn = document.getElementById('cancel-edit-btn');
+            const editingQuestionIndexInput = document.getElementById('editing-question-index');
+            const pillarInput = document.getElementById('pillar-input');
+            const questionInput = document.getElementById('question-input');
+            const optionAInput = document.getElementById('option-a-input');
+            const optionBInput = document.getElementById('option-b-input');
+            const optionCInput = document.getElementById('option-c-input');
+            const optionDInput = document.getElementById('option-d-input');
 
-            function resetForNextStudent() {
-                studentHasVoted = false;
-                optionItems.forEach(item => item.classList.remove('selected'));
-                optionsContainer.classList.remove('locked');
-                nextStudentButton.classList.add('hidden');
+            const bars = {
+                a: document.getElementById('bar-a'), b: document.getElementById('bar-b'),
+                c: document.getElementById('bar-c'), d: document.getElementById('bar-d'),
+            };
+            const resultTexts = {
+                a: document.getElementById('result-text-a'), b: document.getElementById('result-text-b'),
+                c: document.getElementById('result-text-c'), d: document.getElementById('result-text-d'),
+            };
+            const voteInfos = {
+                a: document.getElementById('vote-info-a'), b: document.getElementById('vote-info-b'),
+                c: document.getElementById('vote-info-c'), d: document.getElementById('vote-info-d'),
+            };
+            
+            // --- DATA MANAGEMENT ---
+            function initializeQuestions() {
+                const savedQuestions = localStorage.getItem('pollQuestions');
+                questions = savedQuestions ? JSON.parse(savedQuestions) : defaultQuestions;
+                saveQuestions();
             }
 
+            function saveQuestions() {
+                localStorage.setItem('pollQuestions', JSON.stringify(questions));
+            }
+            
+            // --- UI FLOW ---
+            function startPoll() {
+                if(questions.length === 0) {
+                    alert('Não há perguntas cadastradas. Adicione perguntas nas configurações.');
+                    return;
+                }
+                currentQuestionIndex = 0;
+                allResults = [];
+                welcomeScreenEl.classList.add('hidden');
+                finalScreenEl.classList.add('hidden');
+                appContentEl.classList.remove('hidden');
+                loadQuestion(currentQuestionIndex);
+            }
+
+            function returnToHome() {
+                finalScreenEl.classList.add('hidden');
+                appContentEl.classList.add('hidden');
+                welcomeScreenEl.classList.remove('hidden');
+            }
+
+            // --- QUESTION & VOTING LOGIC ---
             function loadQuestion(index) {
                 resultsContainer.classList.add('hidden');
                 actionSection.classList.remove('hidden');
                 optionsContainer.classList.remove('hidden');
                 
-                Object.values(bars).forEach(bar => {
-                    bar.style.width = '0%';
-                });
-
+                Object.values(bars).forEach(bar => { bar.style.width = '0%'; });
                 currentVotes = { a: 0, b: 0, c: 0, d: 0 };
                 studentVoteCount = 0;
                 studentVoteCounterEl.textContent = '';
-                voteCounters.forEach(counter => counter.textContent = '0');
+                
                 resetForNextStudent();
                 nextButton.classList.add('hidden');
                 generateButton.classList.remove('hidden');
@@ -561,60 +483,48 @@
             }
             
             function handleVote(optionKey) {
-                if (studentHasVoted) {
-                    return; // Prevent multiple votes from one student
-                }
+                if (studentHasVoted) return;
                 studentHasVoted = true;
-                
                 currentVotes[optionKey]++;
                 studentVoteCount++;
-                
-                studentVoteCounterEl.textContent = `(${studentVoteCount} ${studentVoteCount === 1 ? 'aluno votou' : 'alunos votaram'})`;
-                
+                studentVoteCounterEl.textContent = `(${studentVoteCount} ${studentVoteCount === 1 ? 'voto' : 'votos'})`;
                 document.getElementById(`option-${optionKey}`).classList.add('selected');
                 optionsContainer.classList.add('locked');
-                
                 nextStudentButton.classList.remove('hidden');
+            }
+            
+            function resetForNextStudent() {
+                studentHasVoted = false;
+                optionItems.forEach(item => item.classList.remove('selected'));
+                optionsContainer.classList.remove('locked');
+                nextStudentButton.classList.add('hidden');
             }
 
             function generateResults() {
-                const { a: votesA, b: votesB, c: votesC, d: votesD } = currentVotes;
-                const totalVotes = votesA + votesB + votesC + votesD;
-
+                const totalVotes = Object.values(currentVotes).reduce((sum, val) => sum + val, 0);
                 if (totalVotes === 0) {
                     alert("Nenhum voto foi registrado. Toque em uma opção para votar.");
                     return;
                 }
                 
-                const currentPillar = questions[currentQuestionIndex].pillar;
-                allResults.push({ pillar: currentPillar, votes: totalVotes });
-
+                allResults.push({ pillar: questions[currentQuestionIndex].pillar, votes: totalVotes });
                 actionSection.classList.add('hidden');
                 optionsContainer.classList.add('hidden');
                 resultsContainer.classList.remove('hidden');
 
-                const percA = (totalVotes > 0) ? (votesA / totalVotes) * 100 : 0;
-                const percB = (totalVotes > 0) ? (votesB / totalVotes) * 100 : 0;
-                const percC = (totalVotes > 0) ? (votesC / totalVotes) * 100 : 0;
-                const percD = (totalVotes > 0) ? (votesD / totalVotes) * 100 : 0;
-
                 const question = questions[currentQuestionIndex];
-
-                const resultsData = [
-                    { bar: bars.a, textEl: resultTexts.a, voteEl: voteInfos.a, text: `A) ${question.options.a}`, votes: votesA, perc: percA.toFixed(1) },
-                    { bar: bars.b, textEl: resultTexts.b, voteEl: voteInfos.b, text: `B) ${question.options.b}`, votes: votesB, perc: percB.toFixed(1) },
-                    { bar: bars.c, textEl: resultTexts.c, voteEl: voteInfos.c, text: `C) ${question.options.c}`, votes: votesC, perc: percC.toFixed(1) },
-                    { bar: bars.d, textEl: resultTexts.d, voteEl: voteInfos.d, text: `D) ${question.options.d}`, votes: votesD, perc: percD.toFixed(1) },
-                ];
-
-                resultsData.forEach(data => {
-                    data.textEl.textContent = data.text;
-                    data.voteEl.textContent = `${data.votes} votos (${data.perc}%)`;
+                const options = ['a', 'b', 'c', 'd'];
+                
+                options.forEach(opt => {
+                    const perc = (totalVotes > 0) ? (currentVotes[opt] / totalVotes) * 100 : 0;
+                    resultTexts[opt].textContent = `${opt.toUpperCase()}) ${question.options[opt]}`;
+                    voteInfos[opt].textContent = `${currentVotes[opt]} votos (${perc.toFixed(1)}%)`;
                 });
 
                 setTimeout(() => {
-                    resultsData.forEach(data => {
-                        data.bar.style.width = `${data.perc}%`;
+                     options.forEach(opt => {
+                        const perc = (totalVotes > 0) ? (currentVotes[opt] / totalVotes) * 100 : 0;
+                        bars[opt].style.width = `${perc}%`;
                     });
                     nextButton.classList.remove('hidden');
                 }, 100);
@@ -634,85 +544,149 @@
             function displayFinalSummary() {
                 const pillarTotals = {};
                 allResults.forEach(result => {
-                    if (pillarTotals[result.pillar]) {
-                        pillarTotals[result.pillar] += result.votes;
-                    } else {
-                        pillarTotals[result.pillar] = result.votes;
-                    }
+                    pillarTotals[result.pillar] = (pillarTotals[result.pillar] || 0) + result.votes;
                 });
                 
                 const pillarDescriptions = {
-                    "Trabalho": "Reflete a busca por propósito, estabilidade e flexibilidade na carreira.",
-                    "Casa Própria": "Mede o desejo pela casa própria em comparação com outras experiências e investimentos.",
-                    "Autonomia": "Indica a idade e as condições ideais para a independência financeira e residencial.",
-                    "Saúde Mental": "Mostra a importância do bem-estar emocional e a abertura para discutir o tema.",
-                    "Planos de Família": "Explora as prioridades e os novos conceitos sobre casamento e filhos.",
-                    "Preocupação Climática": "Avalia o nível de consciência e ação em relação às questões ambientais.",
-                    "Vida Digital": "Analisa o impacto das redes sociais e da vida online no bem-estar e nas relações."
+                    "Trabalho": "Reflete a busca por propósito, estabilidade e flexibilidade na carreira.", "Casa Própria": "Mede o desejo pela casa própria em comparação com outras experiências e investimentos.", "Autonomia": "Indica a idade e as condições ideais para a independência financeira e residencial.", "Saúde Mental": "Mostra a importância do bem-estar emocional e a abertura para discutir o tema.", "Planos de Família": "Explora as prioridades e os novos conceitos sobre casamento e filhos.", "Preocupação Climática": "Avalia o nível de consciência e ação em relação às questões ambientais.", "Vida Digital": "Analisa o impacto das redes sociais e da vida online no bem-estar e nas relações."
                 };
 
                 const summaryContainer = document.getElementById('final-summary-container');
                 summaryContainer.innerHTML = '<h2>Resultados Gerais por Pilar</h2>';
 
-                let pillarEntries = Object.entries(pillarTotals);
-                
-                // Sort pillars by votes in descending order
-                pillarEntries.sort(([, votesA], [, votesB]) => votesB - votesA);
-                
+                let pillarEntries = Object.entries(pillarTotals).sort(([, a], [, b]) => b - a);
                 const maxVotes = pillarEntries.length > 0 ? pillarEntries[0][1] : 0;
-                
                 const pillarColors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#fbc02d', '#a65628'];
 
                 pillarEntries.forEach(([pillar, votes], index) => {
                     const percentage = (maxVotes > 0) ? (votes / maxVotes) * 100 : 0;
-                    const color = pillarColors[index % pillarColors.length];
-                    
-                    const itemContainer = document.createElement('div');
-                    itemContainer.className = 'pillar-summary-item';
-
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'result-bar-wrapper';
-
-                    const bar = document.createElement('div');
-                    bar.className = 'final-bar';
-                    bar.style.backgroundColor = color;
-                    bar.textContent = `#${index + 1} - ${pillar}: ${votes} votos`;
-                    
-                    const description = document.createElement('p');
-                    description.className = 'pillar-description';
-                    description.textContent = pillarDescriptions[pillar] || '';
-
-                    wrapper.appendChild(bar);
-                    itemContainer.appendChild(wrapper);
-                    itemContainer.appendChild(description);
-                    summaryContainer.appendChild(itemContainer);
-
-                    setTimeout(() => {
-                        bar.style.width = `${percentage}%`;
-                    }, 100 * (index + 1));
+                    const itemHTML = `
+                        <div class="pillar-summary-item">
+                            <div class="result-bar-wrapper">
+                                <div class="final-bar" style="background-color: ${pillarColors[index % pillarColors.length]}; width: 0%;" data-width="${percentage}">
+                                    #${index + 1} - ${pillar}: ${votes} votos
+                                </div>
+                            </div>
+                            <p class="pillar-description">${pillarDescriptions[pillar] || ''}</p>
+                        </div>`;
+                    summaryContainer.insertAdjacentHTML('beforeend', itemHTML);
                 });
-            }
-
-            function restartApp() {
-                currentQuestionIndex = 0;
-                allResults = [];
                 
-                finalScreenEl.classList.add('hidden');
-                appContentEl.classList.remove('hidden');
-
-                loadQuestion(currentQuestionIndex);
+                setTimeout(() => {
+                    document.querySelectorAll('.final-bar').forEach(bar => {
+                        bar.style.width = `${bar.dataset.width}%`;
+                    });
+                }, 100);
             }
 
-            optionItems.forEach(item => {
-                item.addEventListener('click', () => handleVote(item.dataset.option));
-            });
+            // --- SETTINGS MODAL LOGIC ---
+            function openSettingsModal() {
+                renderQuestionsList();
+                settingsModal.classList.add('visible');
+            }
+
+            function closeSettingsModal() {
+                settingsModal.classList.remove('visible');
+            }
+            
+            function renderQuestionsList() {
+                questionsListContainer.innerHTML = '';
+                 const uniquePillars = [...new Set(questions.map(q => q.pillar))];
+                document.getElementById('pillar-suggestions').innerHTML = uniquePillars.map(p => `<option value="${p}">`).join('');
+
+                questions.forEach((q, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'question-list-item';
+                    item.innerHTML = `
+                        <p><strong>${q.pillar}:</strong> ${q.question}</p>
+                        <div class="question-item-actions">
+                            <button class="edit-btn" data-index="${index}" title="Editar">✏️</button>
+                            <button class="delete-btn" data-index="${index}" title="Excluir">🗑️</button>
+                        </div>`;
+                    questionsListContainer.appendChild(item);
+                });
+                
+                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openQuestionEditor(e.currentTarget.dataset.index)));
+                document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', (e) => deleteQuestion(e.currentTarget.dataset.index)));
+            }
+            
+            function deleteQuestion(index) {
+                if (confirm('Tem certeza que deseja excluir esta pergunta?')) {
+                    questions.splice(index, 1);
+                    saveQuestions();
+                    renderQuestionsList();
+                }
+            }
+
+            // --- QUESTION EDITOR LOGIC ---
+            function openQuestionEditor(index = null) {
+                questionForm.reset();
+                if (index !== null) {
+                    editorTitle.textContent = 'Editar Pergunta';
+                    const q = questions[index];
+                    pillarInput.value = q.pillar;
+                    questionInput.value = q.question;
+                    optionAInput.value = q.options.a;
+                    optionBInput.value = q.options.b;
+                    optionCInput.value = q.options.c;
+                    optionDInput.value = q.options.d;
+                    editingQuestionIndexInput.value = index;
+                } else {
+                    editorTitle.textContent = 'Adicionar Nova Pergunta';
+                    editingQuestionIndexInput.value = '';
+                }
+                questionEditorModal.classList.add('visible');
+            }
+            
+            function closeQuestionEditor() {
+                questionEditorModal.classList.remove('visible');
+            }
+            
+            function handleSaveQuestion(e) {
+                e.preventDefault();
+                const newQuestion = {
+                    pillar: pillarInput.value.trim(),
+                    question: questionInput.value.trim(),
+                    options: {
+                        a: optionAInput.value.trim(),
+                        b: optionBInput.value.trim(),
+                        c: optionCInput.value.trim(),
+                        d: optionDInput.value.trim(),
+                    }
+                };
+                
+                const index = editingQuestionIndexInput.value;
+                if (index) {
+                    questions[index] = newQuestion;
+                } else {
+                    questions.push(newQuestion);
+                }
+                saveQuestions();
+                renderQuestionsList();
+                closeQuestionEditor();
+            }
+
+            // --- EVENT LISTENERS ---
+            optionItems.forEach(item => item.addEventListener('click', () => handleVote(item.dataset.option)));
             generateButton.addEventListener('click', generateResults);
             nextButton.addEventListener('click', showNextQuestion);
             nextStudentButton.addEventListener('click', resetForNextStudent);
-            homeButton.addEventListener('click', restartApp);
+            homeButton.addEventListener('click', returnToHome);
+            headerHomeButton.addEventListener('click', returnToHome);
+            startButton.addEventListener('click', startPoll);
+            
+            // Settings listeners
+            settingsButton.addEventListener('click', openSettingsModal);
+            closeSettingsBtn.addEventListener('click', closeSettingsModal);
+            addQuestionBtn.addEventListener('click', () => openQuestionEditor());
 
-            // Initial load
-            loadQuestion(currentQuestionIndex);
+            // Editor listeners
+            questionForm.addEventListener('submit', handleSaveQuestion);
+            saveQuestionBtn.addEventListener('click', () => questionForm.requestSubmit());
+            cancelEditBtn.addEventListener('click', closeQuestionEditor);
+
+            // Initial Load
+            initializeQuestions();
         });
     </script>
 </body>
