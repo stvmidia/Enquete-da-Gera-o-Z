@@ -494,7 +494,7 @@
         #vote-confirmation-content h2 {
             font-size: 3rem;
             color: #10b981;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
         
         #vote-confirmation-content p {
@@ -666,7 +666,8 @@
     <div id="vote-confirmation-modal" class="modal">
         <div id="vote-confirmation-content">
             <h2>✅ Resposta Coletada!</h2>
-            <p>Próximo aluno, por favor...</p>
+            <p style="margin-bottom: 30px;">Aguarde o professor chamar o próximo aluno.</p>
+            <button id="next-student-modal-btn" class="action-btn">Chamar Próximo Aluno ➔</button>
         </div>
     </div>
 
@@ -848,6 +849,7 @@
         const confirmDeleteActionBtn = document.getElementById('confirm-delete-action-btn');
         
         const voteConfirmationModal = document.getElementById('vote-confirmation-modal');
+        const nextStudentModalBtn = document.getElementById('next-student-modal-btn');
 
         // --- INITIALIZATION ---
         function saveQuestions() {
@@ -937,12 +939,14 @@
             // Mostra modal de feedback
             voteConfirmationModal.classList.add('visible');
             
-            // Esconde automaticamente após 1.5 segundos e reseta para o próximo aluno
-            setTimeout(() => {
-                voteConfirmationModal.classList.remove('visible');
-                // Reabilita cliques para o próximo aluno
-                optionItems.forEach(opt => opt.style.pointerEvents = 'auto');
-            }, 1500);
+            // AGORA O MODAL ESPERA O CLIQUE DO PROFESSOR NO BOTÃO "CHAMAR PRÓXIMO"
+            // Não há mais setTimeout
+        }
+        
+        function nextStudent() {
+             voteConfirmationModal.classList.remove('visible');
+             // Reabilita cliques para o próximo aluno
+             optionItems.forEach(opt => opt.style.pointerEvents = 'auto');
         }
 
         function generateResults() {
@@ -1211,7 +1215,7 @@
         cancelDeleteModalBtn.addEventListener('click', closeDeleteModal);
         confirmDeleteActionBtn.addEventListener('click', executeDelete);
         optionItems.forEach(item => item.addEventListener('click', () => handleVote(item.dataset.option)));
-        // Removed nextStudentButton listener
+        nextStudentModalBtn.addEventListener('click', nextStudent);
         generateButton.addEventListener('click', generateResults);
         nextQuestionButton.addEventListener('click', showNextQuestion);
 
