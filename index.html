@@ -138,6 +138,12 @@
             justify-content: center;
             overflow: hidden;
             transition: background-color 0.3s, color 0.3s; /* Transição suave ao trocar modo */
+            
+            /* AJUSTE GLOBAL DE ESCALA ( -20% ) para evitar cortes em telas 1080p */
+            zoom: 0.8;
+            -moz-transform: scale(0.8);
+            -moz-transform-origin: center center;
+            width: 100%;
         }
 
         /* --- WELCOME SCREEN --- */
