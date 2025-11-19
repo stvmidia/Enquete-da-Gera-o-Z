@@ -30,22 +30,8 @@
             --color-d: #ef4444;
         }
 
-        /* --- TV MODE (1920x1080 DARK THEME) --- */
-        body.mode-tv {
-            --bg-color: #0f172a;        /* Fundo Escuro Profundo */
-            --card-bg: #1e293b;         /* Card Cinza Escuro */
-            
-            --accent-color: #334155;    /* Azul acinzentado escuro */
-            --accent-hover: #334155;
-            
-            --highlight-color: #38bdf8; /* Azul Neon Claro */
-            --highlight-text: #0f172a;
-            
-            --text-color: #f1f5f9;      /* Branco Off-white */
-            --secondary-text: #94a3b8;  /* Cinza azulado claro */
-            --border-color: #475569;    /* Bordas mais sutis */
-        }
-
+        /* --- TV MODE (1920x1080 - LAYOUT ONLY, KEEP LIGHT THEME) --- */
+        
         /* Ajustes de Layout para TV 1080p */
         body.mode-tv #app-container {
             max-width: 1850px; /* Ocupa quase toda a largura de 1920px */
@@ -54,70 +40,13 @@
 
         body.mode-tv .question-text {
             font-size: 3.8rem; /* Texto Gigante para TV */
-            color: var(--highlight-color);
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.2); /* Leve brilho neon */
         }
 
         body.mode-tv .option-card {
-            background-color: var(--accent-color);
-            border: 2px solid var(--border-color);
             font-size: 2.4rem; /* Opções maiores */
             padding: 35px;
-            box-shadow: 0 6px 0 rgba(0,0,0,0.3); /* Sombra escura */
         }
 
-        body.mode-tv .option-card:active {
-            background-color: var(--accent-color) !important;
-            box-shadow: none !important;
-        }
-
-        body.mode-tv .opt-letter {
-            border-color: transparent; /* Letras mais limpas no modo dark */
-            background-color: rgba(255,255,255,0.1);
-            color: var(--highlight-color);
-        }
-        /* Cores específicas mantidas mas adaptadas */
-        body.mode-tv #opt-a .opt-letter { color: #60a5fa; }
-        body.mode-tv #opt-b .opt-letter { color: #34d399; }
-        body.mode-tv #opt-c .opt-letter { color: #fbbf24; }
-        body.mode-tv #opt-d .opt-letter { color: #f87171; }
-
-        body.mode-tv header {
-            background: var(--card-bg);
-            border-color: var(--border-color);
-        }
-        
-        body.mode-tv .icon-btn {
-            background: #334155;
-            border-color: #475569;
-            color: white;
-        }
-        body.mode-tv .progress {
-            background: #334155;
-            color: white;
-        }
-        
-        body.mode-tv #welcome-screen {
-             background-color: var(--card-bg);
-             border-color: var(--border-color);
-        }
-        body.mode-tv #welcome-screen h1 {
-            color: var(--highlight-color);
-        }
-
-        /* Manter Modais legíveis (Tema Claro Forçado dentro do Modal) */
-        body.mode-tv .modal-content {
-            background-color: #ffffff;
-            color: #0f172a;
-        }
-        body.mode-tv .modal h2,
-        body.mode-tv .modal label, 
-        body.mode-tv .modal p {
-            color: #0f172a !important;
-        }
-        body.mode-tv .modal .question-list-item p {
-            color: #0f172a !important;
-        }
         /* --- FIM MODO TV --- */
 
         * {
@@ -587,18 +516,6 @@
             z-index: 2000;
         }
         
-        /* Override for Dark Mode Vote Confirmation to reduce glare if needed, 
-           but keeping it white/opaque ensures it hides the screen content effectively. */
-        body.mode-tv #vote-confirmation-modal {
-            background-color: rgba(15, 23, 42, 0.98); /* Opaque dark for TV */
-        }
-        body.mode-tv #vote-confirmation-content h2 {
-            color: #34d399; /* Verde no dark */
-        }
-        body.mode-tv #vote-confirmation-content p {
-            color: #cbd5e1;
-        }
-        
         #vote-confirmation-content {
             text-align: center;
             animation: popIn 0.3s ease-out;
@@ -716,11 +633,11 @@
                             <span style="font-size:0.85rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Largura 1400px</span>
                         </div>
                     </label>
-                    <label style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:15px; background: #1e293b; border: 2px solid #334155; border-radius:10px; flex:1; min-width: 250px;">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:15px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius:10px; flex:1; min-width: 250px;">
                         <input type="radio" name="display-mode" value="tv">
                         <div>
-                            <strong style="display:block; color: #f8fafc; font-size: 1rem;">Televisão (1920x1080)</strong>
-                            <span style="font-size:0.85rem; color:#94a3b8; display:block; margin-top:2px;">Tema Escuro, Tela Cheia</span>
+                            <strong style="display:block; color: #0f172a; font-size: 1rem;">Televisão (1920x1080)</strong>
+                            <span style="font-size:0.85rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Texto Grande</span>
                         </div>
                     </label>
                 </div>
