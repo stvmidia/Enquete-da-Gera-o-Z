@@ -471,7 +471,55 @@
             line-height: 1.2;
         }
 
-        /* --- MODALS --- */
+        /* --- SETTINGS SCREEN (FULL PAGE) --- */
+        #settings-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-card {
+            background: var(--card-bg);
+            padding: 40px;
+            width: 95%;
+            max-width: 900px;
+            border-radius: 30px;
+            border: 4px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 95vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- EDITOR SCREEN (FULL PAGE) --- */
+        #editor-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editor-card {
+            background: var(--card-bg);
+            padding: 40px;
+            width: 95%;
+            max-width: 900px;
+            border-radius: 30px;
+            border: 4px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 95vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- MODALS (Only for simple confirmations) --- */
         .modal {
             display: none;
             position: fixed;
@@ -554,6 +602,8 @@
             main { padding: 15px; }
             .chart-bar-track { height: 35px; }
             .chart-option-text { font-size: 1.1rem; }
+            .editor-card { padding: 20px; }
+            .settings-card { padding: 20px; }
         }
     </style>
 </head>
@@ -607,19 +657,18 @@
 
             <div class="controls">
                 <div id="vote-counter-display" style="display:none;">Votos Registrados: 0</div>
-                <!-- Botão de Próximo Aluno REMOVIDO pois o fluxo agora é automático/privado -->
                 <button id="generate-btn" class="action-btn">📊 Ver Gráfico</button>
                 <button id="next-question-btn" class="action-btn">Próxima Questão ➔</button>
             </div>
         </main>
     </div>
 
-    <!-- SETTINGS MODAL -->
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
+    <!-- SETTINGS SCREEN (FULL PAGE REPLACEMENT FOR MODAL) -->
+    <div id="settings-screen">
+        <div class="settings-card">
             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                <h2>Configurações</h2>
-                <button id="close-settings-btn" style="background:none; border:none; font-size: 2rem; cursor:pointer; color:#0f172a;">×</button>
+                <h2 style="font-size: 2.5rem; color: var(--highlight-color); font-weight:900;">Configurações</h2>
+                <button id="close-settings-btn" style="background:none; border:none; font-size: 2.5rem; cursor:pointer; color:#0f172a;">×</button>
             </div>
             
             <!-- DISPLAY MODE SELECTOR -->
@@ -651,11 +700,11 @@
         </div>
     </div>
 
-    <!-- QUESTION EDITOR MODAL -->
-    <div id="question-editor-modal" class="modal">
-        <div class="modal-content">
+    <!-- QUESTION EDITOR SCREEN (FULL PAGE) -->
+    <div id="editor-screen">
+        <div class="editor-card">
             <div class="modal-header" style="margin-bottom: 20px;">
-                <h2 id="editor-title">Editar Pergunta</h2>
+                <h2 id="editor-title" style="font-size: 2.5rem; color: var(--highlight-color); font-weight:900;">Editar Pergunta</h2>
             </div>
             <form id="question-form">
                 <input type="hidden" id="editing-index">
@@ -875,12 +924,14 @@
         const restartButton = document.getElementById('restart-btn');
         const voteCounterDisplay = document.getElementById('vote-counter-display');
 
-        const settingsModal = document.getElementById('settings-modal');
+        // CHANGED: Using settings-screen instead of modal
+        const settingsScreen = document.getElementById('settings-screen');
         const closeSettingsBtn = document.getElementById('close-settings-btn');
         const questionsListContainer = document.getElementById('questions-list');
         const addQuestionBtn = document.getElementById('add-question-btn');
 
-        const questionEditorModal = document.getElementById('question-editor-modal');
+        // CHANGED: Using editor-screen instead of modal
+        const editorScreen = document.getElementById('editor-screen');
         const editorTitle = document.getElementById('editor-title');
         const questionForm = document.getElementById('question-form');
         const editingQuestionIndexInput = document.getElementById('editing-index');
@@ -936,9 +987,9 @@
         function returnToHome() {
              appContainer.style.display = 'none';
              finalScreen.style.display = 'none';
+             editorScreen.style.display = 'none'; 
+             settingsScreen.style.display = 'none';
              welcomeScreen.style.display = 'block';
-             settingsModal.classList.remove('visible');
-             questionEditorModal.classList.remove('visible');
         }
 
         // --- POLL LOGIC ---
@@ -1123,14 +1174,18 @@
             `).join('');
         }
 
-        // --- SETTINGS MODAL LOGIC ---
-        function openSettingsModal() {
+        // --- SETTINGS SCREEN LOGIC ---
+        function openSettingsScreen() {
+            // Hide App, Show Settings Full Screen
+            appContainer.style.display = 'none';
+            settingsScreen.style.display = 'flex';
             renderQuestionsList();
-            settingsModal.classList.add('visible');
         }
 
-        function closeSettingsModal() {
-            settingsModal.classList.remove('visible');
+        function closeSettingsScreen() {
+            // Hide Settings, Show App
+            settingsScreen.style.display = 'none';
+            appContainer.style.display = 'flex';
         }
 
         function renderQuestionsList() {
@@ -1217,9 +1272,13 @@
             });
         }
 
-        // --- QUESTION EDITOR LOGIC ---
+        // --- QUESTION EDITOR LOGIC (FULL SCREEN) ---
         
         function openQuestionEditor(index = null) {
+            // Close settings screen, open editor screen
+            settingsScreen.style.display = 'none';
+            editorScreen.style.display = 'flex';
+
             questionForm.reset();
             if (index !== null) {
                 editorTitle.textContent = 'Editar Pergunta';
@@ -1235,11 +1294,12 @@
                 editorTitle.textContent = 'Adicionar Nova Pergunta';
                 editingQuestionIndexInput.value = '';
             }
-            questionEditorModal.classList.add('visible');
         }
 
         function closeQuestionEditor() {
-            questionEditorModal.classList.remove('visible');
+            // Close editor, reopen settings screen
+            editorScreen.style.display = 'none';
+            settingsScreen.style.display = 'flex';
         }
 
         function handleSaveQuestion(e) {
@@ -1262,8 +1322,8 @@
                 questions.push(newQuestion);
             }
             saveQuestions();
-            renderQuestionsList();
-            closeQuestionEditor();
+            renderQuestionsList(); // Refresh list in settings
+            closeQuestionEditor(); // Go back to settings
         }
 
         // --- DELETE LOGIC ---
@@ -1295,8 +1355,8 @@
             finalScreen.style.display = 'none';
             welcomeScreen.style.display = 'block';
         });
-        settingsButton.addEventListener('click', openSettingsModal);
-        closeSettingsBtn.addEventListener('click', closeSettingsModal);
+        settingsButton.addEventListener('click', openSettingsScreen);
+        closeSettingsBtn.addEventListener('click', closeSettingsScreen);
         addQuestionBtn.addEventListener('click', () => openQuestionEditor(null));
         cancelEditBtn.addEventListener('click', closeQuestionEditor);
         questionForm.addEventListener('submit', handleSaveQuestion);
