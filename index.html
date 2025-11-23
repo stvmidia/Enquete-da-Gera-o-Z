@@ -1015,7 +1015,8 @@
             updateVoteCounter();
 
             progressText.textContent = `Questão ${currentQuestionIndex + 1} / ${questions.length}`;
-            questionText.textContent = q.question;
+            // ADDED: Number to question text
+            questionText.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
             
             // Use badge circles for letters
             document.getElementById('opt-a').innerHTML = `<span class="opt-letter">A</span> ${q.options.a}`;
@@ -1222,7 +1223,8 @@
                 itemDiv.style.border = '1px solid #cbd5e1';
 
                 const textP = document.createElement('p');
-                textP.innerHTML = `<strong>${q.pillar}:</strong> ${q.question}`;
+                // ADDED: Number index to the list item
+                textP.innerHTML = `<strong>${index + 1}. ${q.pillar}:</strong> ${q.question}`;
                 textP.style.margin = '0';
                 textP.style.flex = '1';
                 textP.style.marginRight = '10px';
