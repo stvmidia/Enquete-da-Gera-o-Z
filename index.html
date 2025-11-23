@@ -174,6 +174,14 @@
             color: white;
             border-color: var(--highlight-color);
         }
+        
+        .icon-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f1f5f9;
+            color: #ccc;
+            border-color: #eee;
+        }
 
         .progress {
             font-size: 1.4rem;
@@ -622,7 +630,13 @@
             <div class="header-controls">
                 <button id="home-btn" class="icon-btn" title="Início">🏠</button>
             </div>
-            <div class="progress" id="progress-text">Pergunta 1 de X</div>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="prev-btn" class="icon-btn" title="Anterior" style="font-weight:bold;">◀</button>
+                <div class="progress" id="progress-text">Pergunta 1 de X</div>
+                <button id="next-btn" class="icon-btn" title="Próxima" style="font-weight:bold;">▶</button>
+            </div>
+
             <div class="header-controls">
                 <button id="settings-btn" class="icon-btn" title="Configurações">⚙️</button>
             </div>
@@ -913,6 +927,8 @@
         const progressText = document.getElementById('progress-text');
         const homeButton = document.getElementById('home-btn');
         const settingsButton = document.getElementById('settings-btn');
+        const prevBtnHeader = document.getElementById('prev-btn');
+        const nextBtnHeader = document.getElementById('next-btn');
         
         const questionText = document.getElementById('question-text');
         const optionsGrid = document.getElementById('options-grid');
@@ -1010,6 +1026,15 @@
             nextQuestionButton.style.display = 'none';
             voteCounterDisplay.style.display = 'inline-flex';
             
+            // --- HEADER NAV LOGIC ---
+            if (prevBtnHeader) {
+                prevBtnHeader.disabled = currentQuestionIndex === 0;
+            }
+            if (nextBtnHeader) {
+                nextBtnHeader.disabled = currentQuestionIndex === questions.length - 1;
+            }
+            // ------------------------
+
             votes = { a: 0, b: 0, c: 0, d: 0 };
             totalVotes = 0;
             updateVoteCounter();
@@ -1368,6 +1393,25 @@
         nextStudentModalBtn.addEventListener('click', nextStudent);
         generateButton.addEventListener('click', generateResults);
         nextQuestionButton.addEventListener('click', showNextQuestion);
+
+        // Header Navigation Listeners
+        if (prevBtnHeader) {
+            prevBtnHeader.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    loadQuestion();
+                }
+            });
+        }
+
+        if (nextBtnHeader) {
+            nextBtnHeader.addEventListener('click', () => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }
+            });
+        }
 
         // Init
         initDisplayMode();
