@@ -369,13 +369,13 @@
         }
 
         .chart-row {
-            margin-bottom: 15px;
+            margin-bottom: 25px; /* Increased spacing */
             width: 100%;
         }
 
         .chart-option-text {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+            font-size: 2rem; /* Increased size significantly */
+            margin-bottom: 12px;
             color: var(--text-color);
             font-weight: 700;
             display: flex;
@@ -384,25 +384,26 @@
         
         .chart-letter-badge {
             display: inline-block;
-            width: 26px;
-            height: 26px;
+            width: 45px; /* Bigger Badge */
+            height: 45px;
             border-radius: 50%;
             color: white;
             text-align: center;
-            line-height: 26px;
+            line-height: 45px;
             font-weight: bold;
-            margin-right: 8px;
-            font-size: 0.9rem;
+            margin-right: 15px;
+            font-size: 1.5rem; /* Bigger letter */
+            flex-shrink: 0;
         }
 
         .chart-bar-track {
             width: 100%;
             background-color: var(--accent-color);
-            height: 40px;
-            border-radius: 10px;
+            height: 60px; /* Much taller bars */
+            border-radius: 15px;
             overflow: hidden;
             position: relative;
-            border: 2px solid var(--border-color);
+            border: 3px solid var(--border-color); /* Thicker border */
         }
 
         .chart-bar-fill {
@@ -411,15 +412,15 @@
             transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex;
             align-items: center;
-            padding-left: 15px;
+            padding-left: 20px;
             white-space: nowrap;
         }
 
         .chart-bar-value {
             color: white;
-            font-weight: 800;
-            font-size: 1.3rem;
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
+            font-weight: 900;
+            font-size: 2rem; /* Much bigger numbers */
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
         }
 
         /* --- FINAL SCREEN --- */
@@ -561,9 +562,9 @@
         .modal-header h2 { color: #0f172a; font-size: 2rem; } /* Always dark text in modal */
 
         .form-group input {
-            padding: 12px;
+            padding: 15px; /* Aumentado */
             border: 2px solid #cbd5e1;
-            font-size: 1.1rem;
+            font-size: 1.4rem; /* Aumentado */
             color: #0f172a; /* Always dark text input */
         }
         
@@ -681,36 +682,36 @@
     <div id="settings-screen">
         <div class="settings-card">
             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                <h2 style="font-size: 2.5rem; color: var(--highlight-color); font-weight:900;">Configurações</h2>
-                <button id="close-settings-btn" style="background:none; border:none; font-size: 2.5rem; cursor:pointer; color:#0f172a;">×</button>
+                <h2 style="font-size: 3.2rem; color: var(--highlight-color); font-weight:900;">Configurações</h2>
+                <button id="close-settings-btn" style="background:none; border:none; font-size: 3rem; cursor:pointer; color:#0f172a;">×</button>
             </div>
             
             <!-- DISPLAY MODE SELECTOR -->
             <div style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-                <label style="display:block; font-weight:bold; margin-bottom:12px; font-size:1.1rem; color: #0f172a;">🖥️ Modo de Exibição</label>
+                <label style="display:block; font-weight:bold; margin-bottom:12px; font-size:1.6rem; color: #0f172a;">🖥️ Modo de Exibição</label>
                 <div style="display:flex; gap:15px; flex-wrap: wrap;">
                     <label style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:15px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius:10px; flex:1; min-width: 250px;">
                         <input type="radio" name="display-mode" value="datashow" checked>
                         <div>
-                            <strong style="display:block; color: #0f172a; font-size: 1rem;">Projetor (Padrão)</strong>
-                            <span style="font-size:0.85rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Largura 1400px</span>
+                            <strong style="display:block; color: #0f172a; font-size: 1.4rem;">Projetor (Padrão)</strong>
+                            <span style="font-size:1.1rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Largura 1400px</span>
                         </div>
                     </label>
                     <label style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:15px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius:10px; flex:1; min-width: 250px;">
                         <input type="radio" name="display-mode" value="tv">
                         <div>
-                            <strong style="display:block; color: #0f172a; font-size: 1rem;">Televisão (1920x1080)</strong>
-                            <span style="font-size:0.85rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Texto Grande</span>
+                            <strong style="display:block; color: #0f172a; font-size: 1.4rem;">Televisão (1920x1080)</strong>
+                            <span style="font-size:1.1rem; color:#64748b; display:block; margin-top:2px;">Tema Claro, Texto Grande</span>
                         </div>
                     </label>
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 15px; color: #0f172a; font-size: 1.2rem;">Gerenciar Perguntas</h3>
+            <h3 style="margin-bottom: 15px; color: #0f172a; font-size: 1.8rem;">Gerenciar Perguntas</h3>
             <div id="questions-list" class="question-list" style="display: flex; flex-direction: column; gap: 10px;">
                 <!-- Questions will be rendered here -->
             </div>
-            <button id="add-question-btn" style="width:100%; padding:15px; background-color:#10b981; color:white; border:none; border-radius:8px; font-size:1.2rem; cursor:pointer; margin-top:20px; font-weight:bold;">+ Adicionar Nova Pergunta</button>
+            <button id="add-question-btn" style="width:100%; padding:20px; background-color:#10b981; color:white; border:none; border-radius:8px; font-size:1.6rem; cursor:pointer; margin-top:20px; font-weight:bold;">+ Adicionar Nova Pergunta</button>
         </div>
     </div>
 
@@ -718,47 +719,47 @@
     <div id="editor-screen">
         <div class="editor-card">
             <div class="modal-header" style="margin-bottom: 20px;">
-                <h2 id="editor-title" style="font-size: 2.5rem; color: var(--highlight-color); font-weight:900;">Editar Pergunta</h2>
+                <h2 id="editor-title" style="font-size: 3.2rem; color: var(--highlight-color); font-weight:900;">Editar Pergunta</h2>
             </div>
             <form id="question-form">
                 <input type="hidden" id="editing-index">
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Pilar</label>
+                    <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Pilar</label>
                     <input type="text" id="input-pillar" list="pillar-suggestions" required style="width:100%;">
                     <datalist id="pillar-suggestions"></datalist>
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Pergunta</label>
+                    <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Pergunta</label>
                     <input type="text" id="input-question" required style="width:100%;">
                 </div>
 
                 <div style="display:flex; gap:15px; margin-bottom: 15px;">
                     <div class="form-group" style="flex:1;">
-                        <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Opção A</label>
+                        <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Opção A</label>
                         <input type="text" id="input-opt-a" required style="width:100%;">
                     </div>
                     <div class="form-group" style="flex:1;">
-                        <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Opção B</label>
+                        <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Opção B</label>
                         <input type="text" id="input-opt-b" required style="width:100%;">
                     </div>
                 </div>
                 
                 <div style="display:flex; gap:15px; margin-bottom: 20px;">
                     <div class="form-group" style="flex:1;">
-                        <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Opção C</label>
+                        <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Opção C</label>
                         <input type="text" id="input-opt-c" required style="width:100%;">
                     </div>
                     <div class="form-group" style="flex:1;">
-                        <label style="display:block; margin-bottom:5px; font-weight:bold; color: #475569;">Opção D</label>
+                        <label style="display:block; margin-bottom:8px; font-weight:bold; color: #475569; font-size: 1.5rem;">Opção D</label>
                         <input type="text" id="input-opt-d" required style="width:100%;">
                     </div>
                 </div>
 
                 <div class="form-actions" style="display:flex; gap:10px;">
-                    <button type="button" id="cancel-edit-btn" style="flex:1; background-color:#94a3b8; color:white; border:none; padding:12px; border-radius:5px; cursor:pointer; font-size:1.1rem;">Cancelar</button>
-                    <button type="submit" id="save-question-btn" style="flex:1; background-color:var(--highlight-color); color:white; border:none; padding:12px; border-radius:5px; cursor:pointer; font-size:1.1rem; font-weight:bold;">Salvar</button>
+                    <button type="button" id="cancel-edit-btn" style="flex:1; background-color:#94a3b8; color:white; border:none; padding:15px; border-radius:5px; cursor:pointer; font-size:1.5rem;">Cancelar</button>
+                    <button type="submit" id="save-question-btn" style="flex:1; background-color:var(--highlight-color); color:white; border:none; padding:15px; border-radius:5px; cursor:pointer; font-size:1.5rem; font-weight:bold;">Salvar</button>
                 </div>
             </form>
         </div>
@@ -767,11 +768,11 @@
     <!-- CONFIRM DELETE MODAL -->
     <div id="delete-modal" class="modal">
         <div class="modal-content" style="max-width: 450px; text-align: center;">
-            <h3 style="color:#ef4444; font-size:1.5rem; margin-bottom:15px;">Excluir Pergunta?</h3>
-            <p style="margin-bottom: 30px; color: #475569; font-size: 1.2rem;">Tem certeza? Isso irá remover a pergunta da apresentação.</p>
+            <h3 style="color:#ef4444; font-size:1.8rem; margin-bottom:15px;">Excluir Pergunta?</h3>
+            <p style="margin-bottom: 30px; color: #475569; font-size: 1.4rem;">Tem certeza? Isso irá remover a pergunta da apresentação.</p>
             <div class="form-actions" style="display:flex; gap:15px;">
-                <button id="cancel-delete-modal-btn" style="flex:1; background-color:#e2e8f0; color:#0f172a; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:1.1rem; font-weight:bold;">Cancelar</button>
-                <button id="confirm-delete-action-btn" style="flex:1; background-color:#ef4444; color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:1.1rem; font-weight:bold;">Sim, Excluir</button>
+                <button id="cancel-delete-modal-btn" style="flex:1; background-color:#e2e8f0; color:#0f172a; border:none; padding:15px; border-radius:8px; cursor:pointer; font-size:1.4rem; font-weight:bold;">Cancelar</button>
+                <button id="confirm-delete-action-btn" style="flex:1; background-color:#ef4444; color:white; border:none; padding:15px; border-radius:8px; cursor:pointer; font-size:1.4rem; font-weight:bold;">Sim, Excluir</button>
             </div>
         </div>
     </div>
@@ -1214,6 +1215,19 @@
             appContainer.style.display = 'flex';
         }
 
+        function moveQuestion(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= questions.length) return;
+            
+            // Swap
+            const temp = questions[index];
+            questions[index] = questions[newIndex];
+            questions[newIndex] = temp;
+            
+            saveQuestions();
+            renderQuestionsList();
+        }
+
         function renderQuestionsList() {
             questionsListContainer.innerHTML = '';
             
@@ -1254,12 +1268,59 @@
                 textP.style.flex = '1';
                 textP.style.marginRight = '10px';
                 textP.style.color = '#0f172a';
+                // Inline style override for larger list text
+                textP.style.fontSize = '1.4rem'; 
+                
                 itemDiv.appendChild(textP);
 
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'question-item-actions';
                 actionsDiv.style.display = 'flex';
                 actionsDiv.style.gap = '10px';
+                actionsDiv.style.alignItems = 'center';
+
+                // --- NEW: ORDER BUTTONS ---
+                const moveUpBtn = document.createElement('button');
+                moveUpBtn.innerHTML = '⬆️';
+                moveUpBtn.title = 'Mover para Cima';
+                moveUpBtn.style.background = 'none';
+                moveUpBtn.style.border = 'none';
+                moveUpBtn.style.cursor = 'pointer';
+                moveUpBtn.style.fontSize = '1.8rem';
+                moveUpBtn.style.padding = '5px';
+                
+                if (index === 0) {
+                    moveUpBtn.disabled = true;
+                    moveUpBtn.style.opacity = '0.3';
+                    moveUpBtn.style.cursor = 'default';
+                }
+                moveUpBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    moveQuestion(index, -1);
+                });
+                actionsDiv.appendChild(moveUpBtn);
+
+                const moveDownBtn = document.createElement('button');
+                moveDownBtn.innerHTML = '⬇️';
+                moveDownBtn.title = 'Mover para Baixo';
+                moveDownBtn.style.background = 'none';
+                moveDownBtn.style.border = 'none';
+                moveDownBtn.style.cursor = 'pointer';
+                moveDownBtn.style.fontSize = '1.8rem';
+                moveDownBtn.style.padding = '5px';
+                moveDownBtn.style.marginRight = '10px';
+
+                if (index === questions.length - 1) {
+                    moveDownBtn.disabled = true;
+                    moveDownBtn.style.opacity = '0.3';
+                    moveDownBtn.style.cursor = 'default';
+                }
+                moveDownBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    moveQuestion(index, 1);
+                });
+                actionsDiv.appendChild(moveDownBtn);
+                // --------------------------
 
                 const editBtn = document.createElement('button');
                 editBtn.className = 'edit-btn';
@@ -1268,7 +1329,7 @@
                 editBtn.style.background = 'none';
                 editBtn.style.border = 'none';
                 editBtn.style.cursor = 'pointer';
-                editBtn.style.fontSize = '1.2rem';
+                editBtn.style.fontSize = '1.8rem'; // Larger icon
                 
                 editBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1287,6 +1348,7 @@
                 deleteBtn.style.borderRadius = '5px';
                 deleteBtn.style.cursor = 'pointer';
                 deleteBtn.style.padding = '5px 10px';
+                deleteBtn.style.fontSize = '1.2rem'; // Larger delete text
                 
                 deleteBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
